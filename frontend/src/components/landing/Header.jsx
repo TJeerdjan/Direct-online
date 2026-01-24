@@ -13,7 +13,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-slate-200/50">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-lg border-b border-slate-800">
       <div className="container mx-auto px-4 sm:px-6 lg:px-12">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
@@ -21,7 +21,7 @@ const Header = () => {
             <img 
               src={LOGO_URL} 
               alt="direct-online" 
-              className="h-12 sm:h-14 w-auto"
+              className="h-12 sm:h-14 w-auto brightness-0 invert"
             />
           </div>
           
@@ -37,7 +37,7 @@ const Header = () => {
 
           {/* Mobile Menu Button */}
           <button 
-            className="sm:hidden p-2 text-slate-700"
+            className="sm:hidden p-2 text-white"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -46,7 +46,7 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="sm:hidden pb-4 border-t border-slate-200">
+          <div className="sm:hidden pb-4 border-t border-slate-700">
             <Button 
               onClick={handleCTAClick}
               className="w-full mt-4 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 rounded-lg"
