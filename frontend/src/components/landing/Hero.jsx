@@ -1,58 +1,67 @@
 import React from 'react';
 import { Button } from '../ui/button';
-import { ArrowRight, CheckCircle2, Zap, TrendingUp } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Zap } from 'lucide-react';
 import { heroData, CALENDLY_URL } from '../../data/mock';
 
-// Growth Arrow SVG Component
+// Growth Arrow SVG Component - Full arrow with gradient
 const GrowthArrow = () => (
   <svg 
-    viewBox="0 0 200 200" 
+    viewBox="0 0 300 300" 
     className="w-full h-full"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    {/* Background glow */}
     <defs>
-      <linearGradient id="arrowGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-        <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.3" />
-        <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.6" />
+      {/* Gradient for arrow shaft */}
+      <linearGradient id="shaftGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.6" />
+        <stop offset="50%" stopColor="#5eead4" stopOpacity="0.8" />
+        <stop offset="100%" stopColor="#fbbf24" stopOpacity="0.9" />
       </linearGradient>
-      <filter id="glow">
-        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      {/* Glow filter */}
+      <filter id="arrowGlow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
         <feMerge>
           <feMergeNode in="coloredBlur"/>
           <feMergeNode in="SourceGraphic"/>
         </feMerge>
       </filter>
+      {/* Drop shadow */}
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="2" dy="4" stdDeviation="6" floodOpacity="0.2"/>
+      </filter>
     </defs>
     
-    {/* Stepped growth bars */}
-    <rect x="20" y="160" width="25" height="30" rx="4" fill="#14b8a6" opacity="0.4" />
-    <rect x="55" y="140" width="25" height="50" rx="4" fill="#14b8a6" opacity="0.5" />
-    <rect x="90" y="110" width="25" height="80" rx="4" fill="#14b8a6" opacity="0.6" />
-    <rect x="125" y="70" width="25" height="120" rx="4" fill="#14b8a6" opacity="0.8" />
+    {/* Bar chart in background */}
+    <rect x="40" y="220" width="35" height="50" rx="6" fill="#14b8a6" opacity="0.5" />
+    <rect x="90" y="180" width="35" height="90" rx="6" fill="#14b8a6" opacity="0.6" />
+    <rect x="140" y="130" width="35" height="140" rx="6" fill="#14b8a6" opacity="0.7" />
     
-    {/* Main growth arrow */}
+    {/* Main arrow shaft - thick curved path */}
     <path 
-      d="M30 150 Q70 120 100 100 Q130 80 160 40" 
-      stroke="url(#arrowGradient)" 
-      strokeWidth="6" 
+      d="M60 240 
+         C80 220, 100 200, 120 180 
+         C140 160, 160 140, 180 120
+         C200 100, 220 80, 235 65"
+      stroke="url(#shaftGradient)" 
+      strokeWidth="28" 
       strokeLinecap="round"
       fill="none"
-      filter="url(#glow)"
+      filter="url(#shadow)"
+      opacity="0.85"
     />
     
-    {/* Arrow head */}
-    <polygon 
-      points="160,40 145,55 165,60" 
+    {/* Arrow head - solid orange triangle pointing up-right */}
+    <path 
+      d="M220 30 L270 70 L230 90 L235 65 Z" 
       fill="#f59e0b"
-      filter="url(#glow)"
+      filter="url(#arrowGlow)"
     />
     
-    {/* Sparkle dots */}
-    <circle cx="160" cy="35" r="4" fill="#f59e0b" opacity="0.8" />
-    <circle cx="175" cy="45" r="3" fill="#14b8a6" opacity="0.6" />
-    <circle cx="170" cy="25" r="2" fill="#f59e0b" opacity="0.5" />
+    {/* Decorative accent circles */}
+    <circle cx="270" cy="45" r="8" fill="#f59e0b" opacity="0.7" />
+    <circle cx="285" cy="70" r="5" fill="#14b8a6" opacity="0.6" />
+    <circle cx="260" cy="25" r="4" fill="#fbbf24" opacity="0.5" />
   </svg>
 );
 
@@ -71,7 +80,7 @@ const Hero = () => {
       <div className="hidden sm:block absolute bottom-20 left-10 w-64 md:w-96 h-64 md:h-96 bg-teal-400/10 rounded-full blur-3xl" />
       
       {/* Growth Arrow - positioned to the right */}
-      <div className="hidden lg:block absolute right-8 xl:right-20 top-1/2 -translate-y-1/2 w-64 xl:w-80 h-64 xl:h-80 opacity-70">
+      <div className="hidden lg:block absolute right-4 xl:right-16 2xl:right-24 top-1/2 -translate-y-1/2 w-72 xl:w-96 2xl:w-[450px] h-72 xl:h-96 2xl:h-[450px] opacity-80">
         <GrowthArrow />
       </div>
       
