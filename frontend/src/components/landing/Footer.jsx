@@ -10,11 +10,13 @@ const Footer = () => {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
           {/* Logo & tagline */}
           <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 text-center sm:text-left">
-            <img 
-              src={LOGO_URL} 
-              alt="direct-online" 
-              className="h-10 sm:h-12 w-auto brightness-0 invert"
-            />
+            <div className="bg-white rounded-lg p-1.5">
+              <img 
+                src={LOGO_URL} 
+                alt="direct-online" 
+                className="h-8 sm:h-10 w-auto"
+              />
+            </div>
             <div>
               <span className="text-base sm:text-lg font-bold">{footerData.companyName}</span>
               <p className="text-xs sm:text-sm text-slate-400">{footerData.tagline}</p>
