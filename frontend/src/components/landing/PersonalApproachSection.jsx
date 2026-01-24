@@ -47,11 +47,6 @@ const PersonalApproachSection = () => {
                   alt="Face-to-face gesprek bij jou op kantoor"
                   className="w-full h-auto object-cover"
                 />
-                {/* Overlay with text */}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900/90 via-slate-900/60 to-transparent p-4 sm:p-6">
-                  <p className="text-lg sm:text-xl font-semibold text-white">Face-to-face</p>
-                  <p className="text-sm sm:text-base text-slate-300">bij jou op kantoor</p>
-                </div>
               </div>
             </div>
           </div>
