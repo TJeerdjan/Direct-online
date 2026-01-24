@@ -1,6 +1,7 @@
 import React from 'react';
-import { Zap } from 'lucide-react';
 import { footerData } from '../../data/mock';
+
+const LOGO_URL = "https://customer-assets.emergentagent.com/job_quick-website-pro/artifacts/0idd2dwm_FFFC6FC6-79BA-4A94-AFFB-3F294C6F120E.png";
 
 const Footer = () => {
   return (
@@ -9,9 +10,11 @@ const Footer = () => {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
           {/* Logo & tagline */}
           <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 text-center sm:text-left">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-teal-500 rounded-lg sm:rounded-xl flex items-center justify-center">
-              <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-            </div>
+            <img 
+              src={LOGO_URL} 
+              alt="direct-online" 
+              className="h-10 sm:h-12 w-auto brightness-0 invert"
+            />
             <div>
               <span className="text-base sm:text-lg font-bold">{footerData.companyName}</span>
               <p className="text-xs sm:text-sm text-slate-400">{footerData.tagline}</p>
