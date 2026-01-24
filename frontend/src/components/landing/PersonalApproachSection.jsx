@@ -41,20 +41,16 @@ const PersonalApproachSection = () => {
             
             {/* Visual element */}
             <div className="relative order-1 lg:order-2">
-              <div className="bg-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 border border-slate-700">
-                <div className="aspect-square bg-slate-700/50 rounded-xl sm:rounded-2xl flex items-center justify-center relative overflow-hidden">
-                  {/* Office illustration */}
-                  <div className="text-center">
-                    <div className="w-20 h-20 sm:w-28 md:w-32 sm:h-28 md:h-32 bg-teal-500/20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                      <Users className="w-10 h-10 sm:w-14 md:w-16 sm:h-14 md:h-16 text-teal-400" />
-                    </div>
-                    <p className="text-lg sm:text-xl font-semibold text-white">Face-to-face</p>
-                    <p className="text-sm sm:text-base text-slate-400">bij jou op kantoor</p>
-                  </div>
-                  
-                  {/* Decorative elements */}
-                  <div className="absolute top-4 right-4 w-8 sm:w-12 h-8 sm:h-12 bg-amber-500/20 rounded-full blur-xl" />
-                  <div className="absolute bottom-4 left-4 w-10 sm:w-16 h-10 sm:h-16 bg-teal-500/20 rounded-full blur-xl" />
+              <div className="rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-slate-700">
+                <img 
+                  src="https://customer-assets.emergentagent.com/job_quick-website-pro/artifacts/zit0oiix_image.png"
+                  alt="Face-to-face gesprek bij jou op kantoor"
+                  className="w-full h-auto object-cover"
+                />
+                {/* Overlay with text */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900/90 via-slate-900/60 to-transparent p-4 sm:p-6">
+                  <p className="text-lg sm:text-xl font-semibold text-white">Face-to-face</p>
+                  <p className="text-sm sm:text-base text-slate-300">bij jou op kantoor</p>
                 </div>
               </div>
             </div>
