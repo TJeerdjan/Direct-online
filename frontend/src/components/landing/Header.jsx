@@ -21,7 +21,7 @@ const Header = () => {
             <img 
               src={LOGO_URL} 
               alt="direct-online" 
-              className="h-8 sm:h-10 w-auto"
+              className="h-12 sm:h-14 w-auto"
             />
           </div>
           
