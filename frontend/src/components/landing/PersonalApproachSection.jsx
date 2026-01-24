@@ -43,7 +43,7 @@ const PersonalApproachSection = () => {
             <div className="relative order-1 lg:order-2">
               <div className="rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-slate-700">
                 <img 
-                  src="https://customer-assets.emergentagent.com/job_quick-website-pro/artifacts/zit0oiix_image.png"
+                  src="https://customer-assets.emergentagent.com/job_quick-website-pro/artifacts/tiq0q411_Untitled%20design%20%2874%29.png"
                   alt="Face-to-face gesprek bij jou op kantoor"
                   className="w-full h-auto object-cover"
                 />
