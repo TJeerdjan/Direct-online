@@ -26,7 +26,7 @@ export const comparisonData = {
     { feature: "Meta Ads setup", agency: "€500-800", directOnline: "Inclusief" },
     { feature: "Advertentie copywriting", agency: "€300-500", directOnline: "Inclusief" },
     { feature: "KPI definitie", agency: "€200-400", directOnline: "Inclusief" },
-    { feature: "Rapportage & support", agency: "€100-200/maand", directOnline: "Inclusief" },
+    { feature: "1e maand gratis rapportage & support", agency: "€100-200/maand", directOnline: "Inclusief" },
     { feature: "Contractduur", agency: "6-12 maanden", directOnline: "Geen contract" },
     { feature: "Betalingsvoorwaarden", agency: "50% vooraf", directOnline: "Betaal na oplevering" }
   ],
