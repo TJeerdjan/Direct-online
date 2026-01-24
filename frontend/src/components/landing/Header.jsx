@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Zap, ArrowRight, Menu, X } from 'lucide-react';
+import { ArrowRight, Menu, X } from 'lucide-react';
 import { Button } from '../ui/button';
 import { CALENDLY_URL } from '../../data/mock';
+
+const LOGO_URL = "https://customer-assets.emergentagent.com/job_quick-website-pro/artifacts/0idd2dwm_FFFC6FC6-79BA-4A94-AFFB-3F294C6F120E.png";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -15,11 +17,12 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-12">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-teal-500 rounded-lg sm:rounded-xl flex items-center justify-center">
-              <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-            </div>
-            <span className="text-lg sm:text-xl font-bold text-slate-900">direct-online</span>
+          <div className="flex items-center">
+            <img 
+              src={LOGO_URL} 
+              alt="direct-online" 
+              className="h-10 sm:h-12 w-auto"
+            />
           </div>
           
           {/* Desktop CTA */}
