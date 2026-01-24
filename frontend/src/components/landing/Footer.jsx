@@ -1,7 +1,7 @@
 import React from 'react';
 import { footerData } from '../../data/mock';
 
-const LOGO_URL = "https://customer-assets.emergentagent.com/job_quick-website-pro/artifacts/0idd2dwm_FFFC6FC6-79BA-4A94-AFFB-3F294C6F120E.png";
+const LOGO_URL = "https://customer-assets.emergentagent.com/job_quick-website-pro/artifacts/9zb1lmkl_71512929539.png";
 
 const Footer = () => {
   return (
