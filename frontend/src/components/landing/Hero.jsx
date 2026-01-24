@@ -1,7 +1,60 @@
 import React from 'react';
 import { Button } from '../ui/button';
-import { ArrowRight, CheckCircle2, Zap } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Zap, TrendingUp } from 'lucide-react';
 import { heroData, CALENDLY_URL } from '../../data/mock';
+
+// Growth Arrow SVG Component
+const GrowthArrow = () => (
+  <svg 
+    viewBox="0 0 200 200" 
+    className="w-full h-full"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    {/* Background glow */}
+    <defs>
+      <linearGradient id="arrowGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.3" />
+        <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.6" />
+      </linearGradient>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+        <feMerge>
+          <feMergeNode in="coloredBlur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    
+    {/* Stepped growth bars */}
+    <rect x="20" y="160" width="25" height="30" rx="4" fill="#14b8a6" opacity="0.4" />
+    <rect x="55" y="140" width="25" height="50" rx="4" fill="#14b8a6" opacity="0.5" />
+    <rect x="90" y="110" width="25" height="80" rx="4" fill="#14b8a6" opacity="0.6" />
+    <rect x="125" y="70" width="25" height="120" rx="4" fill="#14b8a6" opacity="0.8" />
+    
+    {/* Main growth arrow */}
+    <path 
+      d="M30 150 Q70 120 100 100 Q130 80 160 40" 
+      stroke="url(#arrowGradient)" 
+      strokeWidth="6" 
+      strokeLinecap="round"
+      fill="none"
+      filter="url(#glow)"
+    />
+    
+    {/* Arrow head */}
+    <polygon 
+      points="160,40 145,55 165,60" 
+      fill="#f59e0b"
+      filter="url(#glow)"
+    />
+    
+    {/* Sparkle dots */}
+    <circle cx="160" cy="35" r="4" fill="#f59e0b" opacity="0.8" />
+    <circle cx="175" cy="45" r="3" fill="#14b8a6" opacity="0.6" />
+    <circle cx="170" cy="25" r="2" fill="#f59e0b" opacity="0.5" />
+  </svg>
+);
 
 const Hero = () => {
   const handleCTAClick = () => {
@@ -16,6 +69,11 @@ const Hero = () => {
       {/* Geometric accent - hidden on mobile for cleaner look */}
       <div className="hidden sm:block absolute top-20 right-10 w-48 md:w-72 h-48 md:h-72 bg-amber-400/10 rounded-full blur-3xl" />
       <div className="hidden sm:block absolute bottom-20 left-10 w-64 md:w-96 h-64 md:h-96 bg-teal-400/10 rounded-full blur-3xl" />
+      
+      {/* Growth Arrow - positioned to the right */}
+      <div className="hidden lg:block absolute right-8 xl:right-20 top-1/2 -translate-y-1/2 w-64 xl:w-80 h-64 xl:h-80 opacity-70">
+        <GrowthArrow />
+      </div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-12 relative z-10 py-8 sm:py-0">
         <div className="max-w-4xl">
