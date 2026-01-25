@@ -12,7 +12,8 @@ export const heroData = {
   badges: [
     "Geen contracten",
     "Betaal na oplevering",
-    "Beperkte plekken"
+    "Beperkte plekken",
+    "100% tevredenheidsgarantie, niet goed? Dan betaal je niks"
   ]
 };
 
