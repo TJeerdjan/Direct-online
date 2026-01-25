@@ -163,7 +163,7 @@ export const footerData = {
   companyName: "direct-online",
   tagline: "Groningse ondernemers online, binnen 24 uur.",
   links: [
-    { label: "Privacy", href: "#privacy" },
+    { label: "Privacy", href: "/privacy" },
     { label: "Voorwaarden", href: "#voorwaarden" }
   ]
 };
