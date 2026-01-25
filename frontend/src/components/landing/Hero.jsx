@@ -26,10 +26,19 @@ const Hero = () => {
           </div>
           
           {/* Main headline */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-4 sm:mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-2 sm:mb-3">
             {heroData.headline}
-            <span className="block text-teal-600 mt-2 text-2xl sm:text-3xl md:text-4xl lg:text-5xl">— voor een prijs die absurd lijkt.</span>
           </h1>
+          
+          {/* Subtitle */}
+          <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-slate-700 mb-2 sm:mb-3">
+            {heroData.subtitle}
+          </p>
+          
+          {/* Accent line */}
+          <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-teal-600 font-semibold mb-4 sm:mb-6">
+            — voor een prijs die absurd lijkt.
+          </p>
           
           {/* Subheadline */}
           <p className="text-lg sm:text-xl md:text-2xl text-slate-600 mb-6 sm:mb-8 max-w-2xl">
