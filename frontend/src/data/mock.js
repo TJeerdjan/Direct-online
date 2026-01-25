@@ -95,7 +95,7 @@ export const whyPossibleData = {
 };
 
 export const personalApproachData = {
-  headline: "Persoonlijk bij jou op kantoor",
+  headline: "Wij komen persoonlijk bij jou langs",
   subheadline: "Geen eindeloze mailwisselingen. Wij komen langs.",
   description: "We bespreken versie 1 van je website live bij jou op kantoor. Face-to-face feedback, directe aanpassingen, en een relatie die verder gaat dan een transactie.",
   benefits: [
