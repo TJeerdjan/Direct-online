@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { footerData } from '../../data/mock';
 
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_quick-website-pro/artifacts/9zb1lmkl_71512929539.png";
@@ -24,13 +25,23 @@ const Footer = () => {
           {/* Links */}
           <div className="flex items-center gap-4 sm:gap-6">
             {footerData.links.map((link, index) => (
-              <a 
-                key={index} 
-                href={link.href}
-                className="text-slate-400 hover:text-white transition-colors text-xs sm:text-sm"
-              >
-                {link.label}
-              </a>
+              link.href.startsWith('/') ? (
+                <Link 
+                  key={index} 
+                  to={link.href}
+                  className="text-slate-400 hover:text-white transition-colors text-xs sm:text-sm"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a 
+                  key={index} 
+                  href={link.href}
+                  className="text-slate-400 hover:text-white transition-colors text-xs sm:text-sm"
+                >
+                  {link.label}
+                </a>
+              )
             ))}
           </div>
         </div>
