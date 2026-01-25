@@ -102,7 +102,8 @@ export const personalApproachData = {
     "Live bespreking op jouw locatie",
     "Directe feedback verwerking",
     "Persoonlijk contact als basis",
-    "Specifiek voor Groningse ondernemers"
+    "Specifiek voor Groningse ondernemers",
+    "100% tevredenheidsgarantie"
   ]
 };
 
