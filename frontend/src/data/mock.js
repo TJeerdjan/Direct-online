@@ -19,7 +19,7 @@ export const heroData = {
 
 export const comparisonData = {
   headline: "Wat je normaal betaalt vs. wat je vandaag betaalt",
-  subheadline: "Over 85% goedkoper. 10x sneller.",
+  subheadline: "85% goedkoper, 10x sneller",
   items: [
     { feature: "Website oplevering", agency: "4-8 weken", directOnline: "24 uur" },
     { feature: "Eerste revisie", agency: "€150-300 extra", directOnline: "Inclusief" },
