@@ -3,7 +3,8 @@
 export const CALENDLY_URL = "https://calendly.com/direct-online/afspraak";
 
 export const heroData = {
-  headline: "Groningse ondernemers: dit is hoe je morgen al online leads krijgt",
+  headline: "Groningse ondernemers opgelet!",
+  subtitle: "Dit is hoe je morgen al online leads krijgt",
   subheadline: "Een complete website + advertentie-setup binnen 24 uur.",
   priceOld: "€3.000+",
   priceNew: "€495",
