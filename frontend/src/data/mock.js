@@ -1,6 +1,6 @@
 // Mock data for direct-online landing page
 
-export const CALENDLY_URL = "https://calendly.com/direct-online/afspraak";
+export const CALENDLY_URL = "https://calendly.com/direct-online-info/30min";
 
 export const heroData = {
   headline: "Groningse ondernemers opgelet!",
