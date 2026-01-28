@@ -3,6 +3,41 @@ import { Button } from '../ui/button';
 import { ArrowRight, CheckCircle2, Zap } from 'lucide-react';
 import { heroData, CALENDLY_URL } from '../../data/mock';
 
+// Blue geometric shape component
+const BlueGeometric = () => (
+  <svg 
+    viewBox="0 0 400 400" 
+    className="w-full h-full"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    {/* Main dark blue triangle */}
+    <polygon 
+      points="0,0 350,0 350,280 0,350" 
+      fill="#2563eb"
+      opacity="0.9"
+    />
+    {/* Medium blue overlay */}
+    <polygon 
+      points="0,50 300,0 380,200 50,350" 
+      fill="#3b82f6"
+      opacity="0.7"
+    />
+    {/* Light blue accent strip */}
+    <polygon 
+      points="0,300 400,180 400,250 0,380" 
+      fill="#60a5fa"
+      opacity="0.8"
+    />
+    {/* Darker accent */}
+    <polygon 
+      points="50,0 200,0 300,150 100,200" 
+      fill="#1d4ed8"
+      opacity="0.5"
+    />
+  </svg>
+);
+
 const Hero = () => {
   const handleCTAClick = () => {
     window.open(CALENDLY_URL, '_blank');
@@ -10,6 +45,11 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center overflow-hidden bg-slate-50">
+      {/* Blue geometric shape - top left */}
+      <div className="absolute -top-10 -left-10 w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] opacity-90 pointer-events-none">
+        <BlueGeometric />
+      </div>
+      
       {/* Subtle background pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-50 via-transparent to-transparent opacity-60" />
       
