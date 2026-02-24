@@ -980,15 +980,6 @@ async def submit_contact_form(tenant_slug: str, submission: FormSubmissionCreate
     
     return {"message": "Message received", "id": submission_doc["id"]}
 
-# Get portfolio categories (for filtering)
-@api_router.get("/public/{tenant_slug}/portfolio/categories")
-async def get_public_portfolio_categories(tenant_slug: str):
-    """Get unique portfolio categories for filtering"""
-    client_db, _ = await get_public_tenant_db(tenant_slug)
-    
-    categories = await client_db.portfolio.distinct("category", {"status": "published"})
-    return {"categories": [c for c in categories if c]}  # Filter out empty categories
-
 # ============== SEED DATA ==============
 
 @api_router.post("/seed")
