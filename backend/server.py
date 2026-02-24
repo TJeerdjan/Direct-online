@@ -759,6 +759,227 @@ async def get_dashboard_stats(current_user: dict = Depends(get_current_user)):
 async def health_check():
     return {"status": "healthy", "service": "Direct-Online Dashboard API"}
 
+# ============== PUBLIC API ENDPOINTS ==============
+# These endpoints are for client websites to fetch their content
+# No authentication required - content is scoped by tenant_slug
+
+# Public Response Models (simplified, only published content)
+class PublicPortfolioItem(BaseModel):
+    id: str
+    title: str
+    slug: str
+    description: str
+    client_name: str
+    category: str
+    images: List[str]
+    tags: List[str]
+    order: int
+    created_at: str
+
+class PublicTestimonial(BaseModel):
+    id: str
+    client_name: str
+    client_title: str
+    client_company: str
+    client_photo: str
+    quote: str
+    rating: int
+    order: int
+
+class PublicPage(BaseModel):
+    id: str
+    title: str
+    slug: str
+    content: Dict[str, Any]
+    seo: Dict[str, str]
+    order: int
+
+class PublicSettings(BaseModel):
+    site_name: str
+    tagline: str
+    logo: str
+    colors: Dict[str, str]
+    social: Dict[str, str]
+
+class PublicSiteData(BaseModel):
+    settings: PublicSettings
+    portfolio: List[PublicPortfolioItem]
+    testimonials: List[PublicTestimonial]
+    pages: List[PublicPage]
+
+async def get_public_tenant_db(tenant_slug: str):
+    """Get database for a tenant by slug (public access)"""
+    tenant = await master_db.tenants.find_one({"slug": tenant_slug, "status": "active"})
+    if not tenant:
+        raise HTTPException(status_code=404, detail="Website not found")
+    return get_client_db(tenant_slug), tenant
+
+# Get all public data for a tenant (single request for entire site)
+@api_router.get("/public/{tenant_slug}", response_model=PublicSiteData)
+async def get_public_site_data(tenant_slug: str):
+    """
+    Get all public content for a client website in a single request.
+    This is optimized for static site generation or initial page load.
+    """
+    client_db, tenant = await get_public_tenant_db(tenant_slug)
+    
+    # Get settings
+    settings_doc = await client_db.settings.find_one({}, {"_id": 0})
+    if not settings_doc:
+        settings_doc = {
+            "site_name": tenant["name"],
+            "tagline": "",
+            "logo": "",
+            "colors": {"primary": "#129387", "accent": "#f59d0e"},
+            "social": {}
+        }
+    
+    # Get published portfolio items
+    portfolio = await client_db.portfolio.find(
+        {"status": "published"}, 
+        {"_id": 0}
+    ).sort("order", 1).to_list(1000)
+    
+    # Get published testimonials
+    testimonials = await client_db.testimonials.find(
+        {"status": "published"}, 
+        {"_id": 0}
+    ).sort("order", 1).to_list(1000)
+    
+    # Get published pages
+    pages = await client_db.pages.find(
+        {"status": "published"}, 
+        {"_id": 0}
+    ).sort("order", 1).to_list(1000)
+    
+    return PublicSiteData(
+        settings=PublicSettings(**settings_doc),
+        portfolio=portfolio,
+        testimonials=testimonials,
+        pages=pages
+    )
+
+# Get public settings only
+@api_router.get("/public/{tenant_slug}/settings", response_model=PublicSettings)
+async def get_public_settings(tenant_slug: str):
+    """Get site settings for a client website"""
+    client_db, tenant = await get_public_tenant_db(tenant_slug)
+    
+    settings_doc = await client_db.settings.find_one({}, {"_id": 0})
+    if not settings_doc:
+        return PublicSettings(
+            site_name=tenant["name"],
+            tagline="",
+            logo="",
+            colors={"primary": "#129387", "accent": "#f59d0e"},
+            social={}
+        )
+    
+    return PublicSettings(**settings_doc)
+
+# Get public portfolio items
+@api_router.get("/public/{tenant_slug}/portfolio", response_model=List[PublicPortfolioItem])
+async def get_public_portfolio(tenant_slug: str, category: Optional[str] = None):
+    """Get published portfolio items for a client website"""
+    client_db, _ = await get_public_tenant_db(tenant_slug)
+    
+    query = {"status": "published"}
+    if category:
+        query["category"] = category
+    
+    items = await client_db.portfolio.find(query, {"_id": 0}).sort("order", 1).to_list(1000)
+    return items
+
+# Get single portfolio item by slug
+@api_router.get("/public/{tenant_slug}/portfolio/{item_slug}", response_model=PublicPortfolioItem)
+async def get_public_portfolio_item(tenant_slug: str, item_slug: str):
+    """Get a single portfolio item by slug"""
+    client_db, _ = await get_public_tenant_db(tenant_slug)
+    
+    item = await client_db.portfolio.find_one(
+        {"slug": item_slug, "status": "published"}, 
+        {"_id": 0}
+    )
+    if not item:
+        raise HTTPException(status_code=404, detail="Portfolio item not found")
+    
+    return item
+
+# Get public testimonials
+@api_router.get("/public/{tenant_slug}/testimonials", response_model=List[PublicTestimonial])
+async def get_public_testimonials(tenant_slug: str, limit: Optional[int] = None):
+    """Get published testimonials for a client website"""
+    client_db, _ = await get_public_tenant_db(tenant_slug)
+    
+    query = client_db.testimonials.find(
+        {"status": "published"}, 
+        {"_id": 0}
+    ).sort("order", 1)
+    
+    if limit:
+        query = query.limit(limit)
+    
+    items = await query.to_list(1000)
+    return items
+
+# Get public pages
+@api_router.get("/public/{tenant_slug}/pages", response_model=List[PublicPage])
+async def get_public_pages(tenant_slug: str):
+    """Get published pages for a client website"""
+    client_db, _ = await get_public_tenant_db(tenant_slug)
+    
+    items = await client_db.pages.find(
+        {"status": "published"}, 
+        {"_id": 0}
+    ).sort("order", 1).to_list(1000)
+    return items
+
+# Get single page by slug
+@api_router.get("/public/{tenant_slug}/pages/{page_slug}", response_model=PublicPage)
+async def get_public_page(tenant_slug: str, page_slug: str):
+    """Get a single page by slug"""
+    client_db, _ = await get_public_tenant_db(tenant_slug)
+    
+    page = await client_db.pages.find_one(
+        {"slug": page_slug, "status": "published"}, 
+        {"_id": 0}
+    )
+    if not page:
+        raise HTTPException(status_code=404, detail="Page not found")
+    
+    return page
+
+# Public form submission (already exists, but let's keep it organized here too)
+@api_router.post("/public/{tenant_slug}/contact", status_code=201)
+async def submit_contact_form(tenant_slug: str, submission: FormSubmissionCreate):
+    """Submit a contact form from a client website"""
+    tenant = await master_db.tenants.find_one({"slug": tenant_slug, "status": "active"})
+    if not tenant:
+        raise HTTPException(status_code=404, detail="Website not found")
+    
+    client_db = get_client_db(tenant_slug)
+    
+    submission_doc = {
+        "id": str(uuid.uuid4()),
+        **submission.model_dump(),
+        "read": False,
+        "archived": False,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await client_db.form_submissions.insert_one(submission_doc)
+    
+    return {"message": "Message received", "id": submission_doc["id"]}
+
+# Get portfolio categories (for filtering)
+@api_router.get("/public/{tenant_slug}/portfolio/categories")
+async def get_public_portfolio_categories(tenant_slug: str):
+    """Get unique portfolio categories for filtering"""
+    client_db, _ = await get_public_tenant_db(tenant_slug)
+    
+    categories = await client_db.portfolio.distinct("category", {"status": "published"})
+    return {"categories": [c for c in categories if c]}  # Filter out empty categories
+
 # ============== SEED DATA ==============
 
 @api_router.post("/seed")
