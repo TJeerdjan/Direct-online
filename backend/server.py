@@ -326,7 +326,7 @@ async def get_all_tenants(current_user: dict = Depends(get_current_user)):
     tenants = await master_db.tenants.find({}, {"_id": 0}).to_list(1000)
     return tenants
 
-@api_router.post("/admin/tenants", response_model=TenantResponse)
+@api_router.post("/admin/tenants", response_model=TenantResponse, status_code=201)
 async def create_tenant(tenant: TenantCreate, current_user: dict = Depends(get_current_user)):
     if current_user["role"] != "agency_admin":
         raise HTTPException(status_code=403, detail="Geen toegang")
@@ -468,7 +468,7 @@ async def get_portfolio_items(current_user: dict = Depends(get_current_user)):
     items = await client_db.portfolio.find({}, {"_id": 0}).sort("order", 1).to_list(1000)
     return items
 
-@api_router.post("/portfolio", response_model=PortfolioItemResponse)
+@api_router.post("/portfolio", response_model=PortfolioItemResponse, status_code=201)
 async def create_portfolio_item(item: PortfolioItemCreate, current_user: dict = Depends(get_current_user)):
     client_db, _ = await get_tenant_db(current_user)
     
@@ -522,7 +522,7 @@ async def get_testimonials(current_user: dict = Depends(get_current_user)):
     items = await client_db.testimonials.find({}, {"_id": 0}).sort("order", 1).to_list(1000)
     return items
 
-@api_router.post("/testimonials", response_model=TestimonialResponse)
+@api_router.post("/testimonials", response_model=TestimonialResponse, status_code=201)
 async def create_testimonial(item: TestimonialCreate, current_user: dict = Depends(get_current_user)):
     client_db, _ = await get_tenant_db(current_user)
     
@@ -570,7 +570,7 @@ async def get_pages(current_user: dict = Depends(get_current_user)):
     items = await client_db.pages.find({}, {"_id": 0}).sort("order", 1).to_list(1000)
     return items
 
-@api_router.post("/pages", response_model=PageResponse)
+@api_router.post("/pages", response_model=PageResponse, status_code=201)
 async def create_page(item: PageCreate, current_user: dict = Depends(get_current_user)):
     client_db, _ = await get_tenant_db(current_user)
     
