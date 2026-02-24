@@ -380,7 +380,8 @@ class DirectOnlineTester:
         if self.failed_tests:
             self.log("\n❌ Failed Tests:", "RESULTS")
             for test in self.failed_tests:
-                self.log(f"  - {test['test']}: {test.get('error', f'Expected {test.get(\"expected\")}, got {test.get(\"actual\")}')}", "RESULTS")
+                error_msg = test.get('error', f"Expected {test.get('expected')}, got {test.get('actual')}")
+                self.log(f"  - {test['test']}: {error_msg}", "RESULTS")
 
 def main():
     tester = DirectOnlineTester()
