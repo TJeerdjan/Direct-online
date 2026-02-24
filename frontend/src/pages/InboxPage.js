@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Inbox, Mail, Archive, CheckCheck } from 'lucide-react';
-import { useToast } from '../components/ui/use-toast';
+import { useToast } from '../hooks/use-toast';
 import { format } from 'date-fns';
 import { nl, enUS } from 'date-fns/locale';
 import { useAuth } from '../context/AuthContext';
