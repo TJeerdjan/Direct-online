@@ -1,0 +1,13 @@
+# =====================================================
+# ENVIRONMENT VARIABLES for portfolio-voorbeeld.nl
+# Add these to your backend/.env file
+# =====================================================
+
+# Direct-Online Dashboard API
+DIRECT_ONLINE_API=https://ghl-connect-2.preview.emergentagent.com/api
+
+# Your tenant slug (as registered in Direct-Online)
+TENANT_SLUG=vermeerdesign
+
+# Note: You can remove the MONGO_URL and DB_NAME variables
+# as this website no longer needs its own database for portfolio data
