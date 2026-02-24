@@ -877,6 +877,15 @@ async def get_public_settings(tenant_slug: str):
     
     return PublicSettings(**settings_doc)
 
+# Get portfolio categories (for filtering) - MUST be before the {item_slug} route
+@api_router.get("/public/{tenant_slug}/portfolio-categories")
+async def get_public_portfolio_categories(tenant_slug: str):
+    """Get unique portfolio categories for filtering"""
+    client_db, _ = await get_public_tenant_db(tenant_slug)
+    
+    categories = await client_db.portfolio.distinct("category", {"status": "published"})
+    return {"categories": [c for c in categories if c]}  # Filter out empty categories
+
 # Get public portfolio items
 @api_router.get("/public/{tenant_slug}/portfolio", response_model=List[PublicPortfolioItem])
 async def get_public_portfolio(tenant_slug: str, category: Optional[str] = None):
