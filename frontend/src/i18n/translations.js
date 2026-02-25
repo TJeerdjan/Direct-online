@@ -151,6 +151,8 @@ export const translations = {
     admin_client_status: "Status",
     admin_client_contact: "Contactpersoon",
     admin_feedback_title: "Alle feedback",
+    admin_view_dashboard: "Bekijk dashboard",
+    admin_view_dashboard_tooltip: "Open klant dashboard in nieuw tabblad",
     
     // Plans
     plan_early_bird: "Early Bird",
