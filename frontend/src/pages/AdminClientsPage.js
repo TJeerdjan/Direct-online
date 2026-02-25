@@ -7,7 +7,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Plus, Pencil, Users, Building2, ExternalLink, UserPlus } from 'lucide-react';
+import { Plus, Pencil, Users, Building2, ExternalLink, UserPlus, Eye } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import { format } from 'date-fns';
 import { nl, enUS } from 'date-fns/locale';
@@ -25,6 +25,7 @@ const AdminClientsPage = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [userDialogOpen, setUserDialogOpen] = useState(false);
   const [selectedTenant, setSelectedTenant] = useState(null);
+  const [viewingDashboard, setViewingDashboard] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
