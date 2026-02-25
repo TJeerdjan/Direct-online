@@ -322,6 +322,8 @@ export const translations = {
     admin_client_status: "Status",
     admin_client_contact: "Contact person",
     admin_feedback_title: "All feedback",
+    admin_view_dashboard: "View dashboard",
+    admin_view_dashboard_tooltip: "Open client dashboard in new tab",
     
     // Plans
     plan_early_bird: "Early Bird",
