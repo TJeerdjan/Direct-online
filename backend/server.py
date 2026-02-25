@@ -447,6 +447,57 @@ async def get_all_feedback(current_user: dict = Depends(get_current_user)):
     feedback_list = await master_db.feedback.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
     return feedback_list
 
+@api_router.post("/admin/tenants/{tenant_id}/impersonate")
+async def impersonate_tenant(tenant_id: str, current_user: dict = Depends(get_current_user)):
+    """
+    Generate a temporary token for admin to view client's dashboard.
+    This allows agency admins to see exactly what clients see.
+    """
+    if current_user["role"] != "agency_admin":
+        raise HTTPException(status_code=403, detail="Geen toegang")
+    
+    # Get tenant info
+    tenant = await master_db.tenants.find_one({"id": tenant_id})
+    if not tenant:
+        raise HTTPException(status_code=404, detail="Klant niet gevonden")
+    
+    # Find a user for this tenant (or create impersonation token)
+    tenant_user = await master_db.users.find_one({"tenant_id": tenant_id})
+    
+    if tenant_user:
+        # Create token as if logged in as this user
+        user_data = {
+            "id": tenant_user["id"],
+            "email": tenant_user["email"],
+            "name": tenant_user["name"],
+            "role": "client",  # Always client role for impersonation
+            "tenant_id": tenant_id,
+            "tenant_slug": tenant["slug"],
+            "language": tenant_user.get("language", "nl"),
+            "impersonated_by": current_user["email"]  # Track who is impersonating
+        }
+    else:
+        # No user exists yet - create a temporary view token
+        user_data = {
+            "id": f"impersonate-{tenant_id}",
+            "email": tenant.get("contact_email", ""),
+            "name": tenant["name"],
+            "role": "client",
+            "tenant_id": tenant_id,
+            "tenant_slug": tenant["slug"],
+            "language": "nl",
+            "impersonated_by": current_user["email"]
+        }
+    
+    token = create_token(user_data)
+    
+    return {
+        "access_token": token,
+        "tenant_name": tenant["name"],
+        "tenant_slug": tenant["slug"],
+        "message": f"Viewing dashboard as {tenant['name']}"
+    }
+
 # ============== CLIENT DASHBOARD ROUTES ==============
 
 async def get_tenant_db(current_user: dict):
