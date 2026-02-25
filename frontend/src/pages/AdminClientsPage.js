@@ -113,6 +113,71 @@ const AdminClientsPage = () => {
     }
   };
 
+  const handleViewDashboard = async (tenant) => {
+    setViewingDashboard(tenant.id);
+    try {
+      const response = await axios.post(`${API}/admin/tenants/${tenant.id}/impersonate`);
+      const { access_token, tenant_name } = response.data;
+      
+      // Open dashboard in new tab with impersonation token
+      const dashboardUrl = `${window.location.origin}/dashboard?impersonate=${access_token}`;
+      
+      // Store token and open new tab
+      const newTab = window.open('about:blank', '_blank');
+      if (newTab) {
+        // Write a small HTML page that sets the token and redirects
+        newTab.document.write(`
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>Opening ${tenant_name} Dashboard...</title>
+              <style>
+                body { 
+                  background: #0e172c; 
+                  color: white; 
+                  font-family: system-ui; 
+                  display: flex; 
+                  align-items: center; 
+                  justify-content: center; 
+                  height: 100vh; 
+                  margin: 0;
+                }
+                .loader { text-align: center; }
+                .spinner {
+                  width: 40px;
+                  height: 40px;
+                  border: 3px solid #334157;
+                  border-top-color: #129387;
+                  border-radius: 50%;
+                  animation: spin 1s linear infinite;
+                  margin: 0 auto 1rem;
+                }
+                @keyframes spin { to { transform: rotate(360deg); } }
+              </style>
+            </head>
+            <body>
+              <div class="loader">
+                <div class="spinner"></div>
+                <p>Opening dashboard voor ${tenant_name}...</p>
+              </div>
+              <script>
+                localStorage.setItem('token', '${access_token}');
+                window.location.href = '${window.location.origin}/dashboard';
+              </script>
+            </body>
+          </html>
+        `);
+        newTab.document.close();
+      }
+      
+      toast({ title: `Dashboard ${tenant_name} geopend in nieuw tabblad` });
+    } catch (error) {
+      console.error('Failed to impersonate:', error);
+      toast({ title: 'Error', description: 'Kon dashboard niet openen', variant: 'destructive' });
+    }
+    setViewingDashboard(null);
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return format(date, 'dd MMM yyyy', { locale: language === 'nl' ? nl : enUS });
