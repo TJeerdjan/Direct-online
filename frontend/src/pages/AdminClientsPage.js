@@ -288,6 +288,21 @@ const AdminClientsPage = () => {
                         <Button 
                           variant="ghost" 
                           size="sm" 
+                          onClick={() => handleViewDashboard(tenant)}
+                          className="text-[#f59d0e] hover:text-[#f59d0e] hover:bg-[#f59d0e]/10"
+                          title="Bekijk dashboard"
+                          disabled={viewingDashboard === tenant.id}
+                          data-testid={`view-dashboard-${tenant.id}`}
+                        >
+                          {viewingDashboard === tenant.id ? (
+                            <div className="w-4 h-4 border-2 border-[#f59d0e] border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <Eye className="w-4 h-4" />
+                          )}
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
                           onClick={() => handleOpenUserDialog(tenant)}
                           className="text-[#129387] hover:text-[#129387] hover:bg-[#129387]/10"
                           title="Gebruiker toevoegen"
