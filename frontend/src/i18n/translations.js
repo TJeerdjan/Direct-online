@@ -169,6 +169,8 @@ export const translations = {
     language: "Taal",
     language_nl: "Nederlands",
     language_en: "English",
+    module_disabled_title: "Module uitgeschakeld",
+    module_disabled_message: "Deze functie is niet beschikbaar in jouw abonnement.",
   },
   
   en: {
@@ -340,6 +342,8 @@ export const translations = {
     language: "Language",
     language_nl: "Nederlands",
     language_en: "English",
+    module_disabled_title: "Module disabled",
+    module_disabled_message: "This feature is not available for your current plan.",
   }
 };
 

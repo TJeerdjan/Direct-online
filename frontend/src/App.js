@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import axios from "axios";
 import "@/App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import { I18nProvider } from "./context/I18nContext";
+import { I18nProvider, useI18n } from "./context/I18nContext";
 import { Toaster } from "./components/ui/toaster";
+import { useToast } from "./hooks/use-toast";
+import { MODULE_ROUTE_MAP } from "./constants/moduleAccess";
 
 // Pages
 import LoginPage from "./pages/LoginPage";
@@ -41,9 +44,55 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
   return children;
 };
 
+const ModuleRouteGuard = ({ children, modulePath }) => {
+  const { isAdmin, isModuleEnabled } = useAuth();
+  const { t } = useI18n();
+  const { toast } = useToast();
+  const hasNotifiedRef = useRef(false);
+
+  const isAllowed = isAdmin || isModuleEnabled(modulePath);
+
+  useEffect(() => {
+    if (!isAllowed && !hasNotifiedRef.current) {
+      hasNotifiedRef.current = true;
+      toast({
+        title: t("module_disabled_title"),
+        description: t("module_disabled_message"),
+        variant: "destructive",
+      });
+    }
+  }, [isAllowed, toast, t]);
+
+  if (!isAllowed) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+};
+
 // App Routes
 const AppRoutes = () => {
   const { isAuthenticated, loading } = useAuth();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        const payload = error?.response?.data?.detail || error?.response?.data;
+        if (error?.response?.status === 403 && payload?.code === "module_disabled") {
+          toast({
+            title: "Module disabled",
+            description: payload.message || "This module is disabled for your tenant.",
+            variant: "destructive",
+          });
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => axios.interceptors.response.eject(interceptor);
+  }, [toast]);
 
   if (loading) {
     return (
@@ -58,7 +107,7 @@ const AppRoutes = () => {
       <Route path="/login" element={
         isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />
       } />
-      
+
       <Route path="/" element={
         <ProtectedRoute>
           <DashboardLayout />
@@ -66,13 +115,13 @@ const AppRoutes = () => {
       }>
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<DashboardPage />} />
-        <Route path="portfolio" element={<PortfolioPage />} />
-        <Route path="testimonials" element={<TestimonialsPage />} />
-        <Route path="pages" element={<PagesPage />} />
-        <Route path="inbox" element={<InboxPage />} />
-        <Route path="feedback" element={<FeedbackPage />} />
+        <Route path="portfolio" element={<ModuleRouteGuard modulePath={MODULE_ROUTE_MAP.portfolio}><PortfolioPage /></ModuleRouteGuard>} />
+        <Route path="testimonials" element={<ModuleRouteGuard modulePath={MODULE_ROUTE_MAP.testimonials}><TestimonialsPage /></ModuleRouteGuard>} />
+        <Route path="pages" element={<ModuleRouteGuard modulePath={MODULE_ROUTE_MAP.pages}><PagesPage /></ModuleRouteGuard>} />
+        <Route path="inbox" element={<ModuleRouteGuard modulePath={MODULE_ROUTE_MAP.inbox}><InboxPage /></ModuleRouteGuard>} />
+        <Route path="feedback" element={<ModuleRouteGuard modulePath={MODULE_ROUTE_MAP.feedback}><FeedbackPage /></ModuleRouteGuard>} />
         <Route path="settings" element={<SettingsPage />} />
-        
+
         {/* Admin Routes */}
         <Route path="admin/clients" element={
           <ProtectedRoute adminOnly>

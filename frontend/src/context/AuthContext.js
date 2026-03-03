@@ -75,6 +75,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+
+  const isModuleEnabled = (modulePath) => {
+    if (!modulePath || user?.role === 'agency_admin') {
+      return true;
+    }
+
+    const [moduleKey, property = 'enabled'] = modulePath.split('.');
+    return user?.modules?.[moduleKey]?.[property] !== false;
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -85,7 +95,8 @@ export const AuthProvider = ({ children }) => {
       logout,
       setLanguage,
       isAuthenticated: !!token && !!user,
-      isAdmin: user?.role === 'agency_admin'
+      isAdmin: user?.role === 'agency_admin',
+      isModuleEnabled
     }}>
       {children}
     </AuthContext.Provider>

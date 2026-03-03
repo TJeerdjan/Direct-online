@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useI18n } from '../context/I18nContext';
@@ -13,21 +13,30 @@ import {
   Users,
   LogOut,
   Menu,
-  X,
   ChevronDown
 } from 'lucide-react';
-import { Button } from '../components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '../components/ui/dropdown-menu';
+import { CLIENT_NAV_ITEMS } from '../constants/moduleAccess';
 
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_ghl-connect-2/artifacts/1k7uaxll_logo_direct-online.png";
 
+const navItemIcons = {
+  dashboard: LayoutDashboard,
+  portfolio: Briefcase,
+  testimonials: MessageSquareQuote,
+  pages: FileText,
+  inbox: Inbox,
+  feedback: MessageCircle,
+  settings: Settings,
+};
+
 const DashboardLayout = () => {
-  const { user, logout, isAdmin, language, setLanguage } = useAuth();
+  const { user, logout, isAdmin, language, setLanguage, isModuleEnabled } = useAuth();
   const { t } = useI18n();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -36,16 +45,14 @@ const DashboardLayout = () => {
     logout();
     navigate('/login');
   };
-
-  const clientNavItems = [
-    { path: '/dashboard', icon: LayoutDashboard, label: 'nav_dashboard' },
-    { path: '/portfolio', icon: Briefcase, label: 'nav_portfolio' },
-    { path: '/testimonials', icon: MessageSquareQuote, label: 'nav_testimonials' },
-    { path: '/pages', icon: FileText, label: 'nav_pages' },
-    { path: '/inbox', icon: Inbox, label: 'nav_inbox' },
-    { path: '/feedback', icon: MessageCircle, label: 'nav_feedback' },
-    { path: '/settings', icon: Settings, label: 'nav_settings' },
-  ];
+  const clientNavItems = useMemo(() => {
+    return CLIENT_NAV_ITEMS
+      .filter((item) => isAdmin || isModuleEnabled(item.modulePath))
+      .map((item) => ({
+        ...item,
+        icon: navItemIcons[item.icon],
+      }));
+  }, [isAdmin, isModuleEnabled]);
 
   const adminNavItems = [
     { path: '/dashboard', icon: LayoutDashboard, label: 'nav_dashboard' },

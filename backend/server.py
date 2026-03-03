@@ -61,7 +61,9 @@ class UserResponse(BaseModel):
     name: str
     role: str
     tenant_id: Optional[str] = None
+    tenant_slug: Optional[str] = None
     language: str = "nl"
+    modules: Dict[str, Any] = Field(default_factory=dict)
 
 class TokenResponse(BaseModel):
     access_token: str
@@ -286,14 +288,22 @@ async def login(credentials: UserLogin):
     if not user or not verify_password(credentials.password, user["password"]):
         raise HTTPException(status_code=401, detail="Ongeldige inloggegevens")
     
+    tenant = None
+    if user.get("tenant_id"):
+        tenant = await master_db.tenants.find_one({"id": user["tenant_id"]})
+
     user_data = {
         "id": user["id"],
         "email": user["email"],
         "name": user["name"],
         "role": user["role"],
         "tenant_id": user.get("tenant_id"),
+        "tenant_slug": tenant.get("slug") if tenant else None,
         "language": user.get("language", "nl")
     }
+
+    if tenant:
+        user_data["modules"] = tenant.get("modules", {})
     
     token = create_token(user_data)
     return TokenResponse(
@@ -303,7 +313,24 @@ async def login(credentials: UserLogin):
 
 @api_router.get("/auth/me", response_model=UserResponse)
 async def get_me(current_user: dict = Depends(get_current_user)):
-    return UserResponse(**current_user)
+    user = await master_db.users.find_one({"id": current_user["id"]})
+    if not user:
+        raise HTTPException(status_code=404, detail="Gebruiker niet gevonden")
+
+    tenant = None
+    if user.get("tenant_id"):
+        tenant = await master_db.tenants.find_one({"id": user["tenant_id"]})
+
+    return UserResponse(
+        id=user["id"],
+        email=user["email"],
+        name=user["name"],
+        role=user["role"],
+        tenant_id=user.get("tenant_id"),
+        tenant_slug=tenant.get("slug") if tenant else None,
+        language=user.get("language", "nl"),
+        modules=tenant.get("modules", {}) if tenant else {}
+    )
 
 @api_router.put("/auth/language")
 async def update_language(language: str, current_user: dict = Depends(get_current_user)):
@@ -512,16 +539,33 @@ async def get_tenant_db(current_user: dict):
     
     return get_client_db(tenant["slug"]), tenant
 
+def require_module_access(module_key: str):
+    async def module_dependency(current_user: dict = Depends(get_current_user)):
+        client_db, tenant = await get_tenant_db(current_user)
+        module_config = tenant.get("modules", {}).get(module_key, {})
+        if module_config.get("enabled", True) is False:
+            raise HTTPException(
+                status_code=403,
+                detail={
+                    "code": "module_disabled",
+                    "module": module_key,
+                    "message": f"The '{module_key}' module is disabled for this tenant."
+                }
+            )
+        return client_db, tenant
+
+    return module_dependency
+
 # Portfolio Routes
 @api_router.get("/portfolio", response_model=List[PortfolioItemResponse])
-async def get_portfolio_items(current_user: dict = Depends(get_current_user)):
-    client_db, _ = await get_tenant_db(current_user)
+async def get_portfolio_items(module_context: tuple = Depends(require_module_access("portfolio"))):
+    client_db, _ = module_context
     items = await client_db.portfolio.find({}, {"_id": 0}).sort("order", 1).to_list(1000)
     return items
 
 @api_router.post("/portfolio", response_model=PortfolioItemResponse, status_code=201)
-async def create_portfolio_item(item: PortfolioItemCreate, current_user: dict = Depends(get_current_user)):
-    client_db, _ = await get_tenant_db(current_user)
+async def create_portfolio_item(item: PortfolioItemCreate, module_context: tuple = Depends(require_module_access("portfolio"))):
+    client_db, _ = module_context
     
     now = datetime.now(timezone.utc).isoformat()
     item_doc = {
@@ -537,8 +581,8 @@ async def create_portfolio_item(item: PortfolioItemCreate, current_user: dict = 
     return item_doc
 
 @api_router.put("/portfolio/{item_id}", response_model=PortfolioItemResponse)
-async def update_portfolio_item(item_id: str, update: PortfolioItemUpdate, current_user: dict = Depends(get_current_user)):
-    client_db, _ = await get_tenant_db(current_user)
+async def update_portfolio_item(item_id: str, update: PortfolioItemUpdate, module_context: tuple = Depends(require_module_access("portfolio"))):
+    client_db, _ = module_context
     
     update_data = {k: v for k, v in update.model_dump().items() if v is not None}
     if "title" in update_data:
@@ -557,8 +601,8 @@ async def update_portfolio_item(item_id: str, update: PortfolioItemUpdate, curre
     return item
 
 @api_router.delete("/portfolio/{item_id}")
-async def delete_portfolio_item(item_id: str, current_user: dict = Depends(get_current_user)):
-    client_db, _ = await get_tenant_db(current_user)
+async def delete_portfolio_item(item_id: str, module_context: tuple = Depends(require_module_access("portfolio"))):
+    client_db, _ = module_context
     
     result = await client_db.portfolio.delete_one({"id": item_id})
     if result.deleted_count == 0:
@@ -568,14 +612,14 @@ async def delete_portfolio_item(item_id: str, current_user: dict = Depends(get_c
 
 # Testimonials Routes
 @api_router.get("/testimonials", response_model=List[TestimonialResponse])
-async def get_testimonials(current_user: dict = Depends(get_current_user)):
-    client_db, _ = await get_tenant_db(current_user)
+async def get_testimonials(module_context: tuple = Depends(require_module_access("testimonials"))):
+    client_db, _ = module_context
     items = await client_db.testimonials.find({}, {"_id": 0}).sort("order", 1).to_list(1000)
     return items
 
 @api_router.post("/testimonials", response_model=TestimonialResponse, status_code=201)
-async def create_testimonial(item: TestimonialCreate, current_user: dict = Depends(get_current_user)):
-    client_db, _ = await get_tenant_db(current_user)
+async def create_testimonial(item: TestimonialCreate, module_context: tuple = Depends(require_module_access("testimonials"))):
+    client_db, _ = module_context
     
     item_doc = {
         "id": str(uuid.uuid4()),
@@ -588,8 +632,8 @@ async def create_testimonial(item: TestimonialCreate, current_user: dict = Depen
     return item_doc
 
 @api_router.put("/testimonials/{item_id}", response_model=TestimonialResponse)
-async def update_testimonial(item_id: str, update: TestimonialUpdate, current_user: dict = Depends(get_current_user)):
-    client_db, _ = await get_tenant_db(current_user)
+async def update_testimonial(item_id: str, update: TestimonialUpdate, module_context: tuple = Depends(require_module_access("testimonials"))):
+    client_db, _ = module_context
     
     update_data = {k: v for k, v in update.model_dump().items() if v is not None}
     
@@ -605,8 +649,8 @@ async def update_testimonial(item_id: str, update: TestimonialUpdate, current_us
     return item
 
 @api_router.delete("/testimonials/{item_id}")
-async def delete_testimonial(item_id: str, current_user: dict = Depends(get_current_user)):
-    client_db, _ = await get_tenant_db(current_user)
+async def delete_testimonial(item_id: str, module_context: tuple = Depends(require_module_access("testimonials"))):
+    client_db, _ = module_context
     
     result = await client_db.testimonials.delete_one({"id": item_id})
     if result.deleted_count == 0:
@@ -616,14 +660,14 @@ async def delete_testimonial(item_id: str, current_user: dict = Depends(get_curr
 
 # Pages Routes
 @api_router.get("/pages", response_model=List[PageResponse])
-async def get_pages(current_user: dict = Depends(get_current_user)):
-    client_db, _ = await get_tenant_db(current_user)
+async def get_pages(module_context: tuple = Depends(require_module_access("pages"))):
+    client_db, _ = module_context
     items = await client_db.pages.find({}, {"_id": 0}).sort("order", 1).to_list(1000)
     return items
 
 @api_router.post("/pages", response_model=PageResponse, status_code=201)
-async def create_page(item: PageCreate, current_user: dict = Depends(get_current_user)):
-    client_db, _ = await get_tenant_db(current_user)
+async def create_page(item: PageCreate, module_context: tuple = Depends(require_module_access("pages"))):
+    client_db, _ = module_context
     
     now = datetime.now(timezone.utc).isoformat()
     item_doc = {
@@ -639,8 +683,8 @@ async def create_page(item: PageCreate, current_user: dict = Depends(get_current
     return item_doc
 
 @api_router.put("/pages/{item_id}", response_model=PageResponse)
-async def update_page(item_id: str, update: PageUpdate, current_user: dict = Depends(get_current_user)):
-    client_db, _ = await get_tenant_db(current_user)
+async def update_page(item_id: str, update: PageUpdate, module_context: tuple = Depends(require_module_access("pages"))):
+    client_db, _ = module_context
     
     update_data = {k: v for k, v in update.model_dump().items() if v is not None}
     if "title" in update_data:
@@ -659,8 +703,8 @@ async def update_page(item_id: str, update: PageUpdate, current_user: dict = Dep
     return item
 
 @api_router.delete("/pages/{item_id}")
-async def delete_page(item_id: str, current_user: dict = Depends(get_current_user)):
-    client_db, _ = await get_tenant_db(current_user)
+async def delete_page(item_id: str, module_context: tuple = Depends(require_module_access("pages"))):
+    client_db, _ = module_context
     
     result = await client_db.pages.delete_one({"id": item_id})
     if result.deleted_count == 0:
@@ -670,14 +714,14 @@ async def delete_page(item_id: str, current_user: dict = Depends(get_current_use
 
 # Form Submissions (Inbox)
 @api_router.get("/inbox", response_model=List[FormSubmissionResponse])
-async def get_inbox(current_user: dict = Depends(get_current_user)):
-    client_db, _ = await get_tenant_db(current_user)
+async def get_inbox(module_context: tuple = Depends(require_module_access("forms"))):
+    client_db, _ = module_context
     items = await client_db.form_submissions.find({"archived": False}, {"_id": 0}).sort("created_at", -1).to_list(1000)
     return items
 
 @api_router.put("/inbox/{item_id}/read")
-async def mark_as_read(item_id: str, current_user: dict = Depends(get_current_user)):
-    client_db, _ = await get_tenant_db(current_user)
+async def mark_as_read(item_id: str, module_context: tuple = Depends(require_module_access("forms"))):
+    client_db, _ = module_context
     
     result = await client_db.form_submissions.update_one(
         {"id": item_id},
@@ -690,8 +734,8 @@ async def mark_as_read(item_id: str, current_user: dict = Depends(get_current_us
     return {"message": "Gemarkeerd als gelezen"}
 
 @api_router.put("/inbox/{item_id}/archive")
-async def archive_submission(item_id: str, current_user: dict = Depends(get_current_user)):
-    client_db, _ = await get_tenant_db(current_user)
+async def archive_submission(item_id: str, module_context: tuple = Depends(require_module_access("forms"))):
+    client_db, _ = module_context
     
     result = await client_db.form_submissions.update_one(
         {"id": item_id},
@@ -761,8 +805,8 @@ async def update_settings(update: SettingsUpdate, current_user: dict = Depends(g
 
 # Feedback
 @api_router.post("/feedback")
-async def submit_feedback(feedback: FeedbackCreate, current_user: dict = Depends(get_current_user)):
-    _, tenant = await get_tenant_db(current_user)
+async def submit_feedback(feedback: FeedbackCreate, module_context: tuple = Depends(require_module_access("feedback")), current_user: dict = Depends(get_current_user)):
+    _, tenant = module_context
     
     feedback_doc = {
         "id": str(uuid.uuid4()),
@@ -779,7 +823,8 @@ async def submit_feedback(feedback: FeedbackCreate, current_user: dict = Depends
     return {"message": "Feedback ontvangen", "id": feedback_doc["id"]}
 
 @api_router.get("/feedback", response_model=List[FeedbackResponse])
-async def get_my_feedback(current_user: dict = Depends(get_current_user)):
+async def get_my_feedback(module_context: tuple = Depends(require_module_access("feedback")), current_user: dict = Depends(get_current_user)):
+    _ = module_context
     feedback_list = await master_db.feedback.find(
         {"user_id": current_user["id"]},
         {"_id": 0}
