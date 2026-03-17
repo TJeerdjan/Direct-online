@@ -21,7 +21,7 @@ const ScrollToTop = () => {
 const AdminRedirect = () => {
   useEffect(() => {
     // Redirect to Direct-Online dashboard
-    window.location.href = "https://ghl-connect-2.preview.emergentagent.com";
+    window.location.href = "https://form-fix-debug-1.preview.emergentagent.com";
   }, []);
   
   return (
@@ -31,7 +31,7 @@ const AdminRedirect = () => {
         <p className="text-xl mb-2">Doorsturen naar Direct-Online Dashboard...</p>
         <p className="text-gray-400">Je wordt automatisch doorgestuurd</p>
         <a 
-          href="https://ghl-connect-2.preview.emergentagent.com" 
+          href="https://form-fix-debug-1.preview.emergentagent.com" 
           className="text-teal-500 hover:underline mt-4 inline-block"
         >
           Klik hier als je niet wordt doorgestuurd

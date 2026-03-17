@@ -4,7 +4,7 @@
 # =====================================================
 
 # Direct-Online Dashboard API
-DIRECT_ONLINE_API=https://ghl-connect-2.preview.emergentagent.com/api
+DIRECT_ONLINE_API=https://form-fix-debug-1.preview.emergentagent.com/api
 
 # Your tenant slug (as registered in Direct-Online)
 TENANT_SLUG=vermeerdesign

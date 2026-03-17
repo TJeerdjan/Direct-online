@@ -16,10 +16,10 @@ load_dotenv(ROOT_DIR / '.env')
 
 # Direct-Online API Configuration
 # Add this to your .env file:
-# DIRECT_ONLINE_API=https://ghl-connect-2.preview.emergentagent.com/api
+# DIRECT_ONLINE_API=https://form-fix-debug-1.preview.emergentagent.com/api
 # TENANT_SLUG=vermeerdesign
 
-DIRECT_ONLINE_API = os.environ.get('DIRECT_ONLINE_API', 'https://ghl-connect-2.preview.emergentagent.com/api')
+DIRECT_ONLINE_API = os.environ.get('DIRECT_ONLINE_API', 'https://form-fix-debug-1.preview.emergentagent.com/api')
 TENANT_SLUG = os.environ.get('TENANT_SLUG', 'vermeerdesign')
 
 # Create the main app
@@ -190,7 +190,7 @@ async def submit_contact(data: dict):
 async def get_admin_redirect():
     """Return the Direct-Online dashboard URL for admin redirect"""
     return {
-        "redirect_url": "https://ghl-connect-2.preview.emergentagent.com",
+        "redirect_url": "https://form-fix-debug-1.preview.emergentagent.com",
         "message": "Please login to the Direct-Online dashboard to manage your website"
     }
 

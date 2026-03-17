@@ -32,7 +32,7 @@ load_dotenv(ROOT_DIR / '.env')
 # Direct-Online API - Don't change unless API moves
 DIRECT_ONLINE_API = os.environ.get(
     'DIRECT_ONLINE_API', 
-    'https://ghl-connect-2.preview.emergentagent.com/api'
+    'https://form-fix-debug-1.preview.emergentagent.com/api'
 )
 
 # Client's tenant slug - CHANGE THIS PER CLIENT
@@ -201,7 +201,7 @@ async def submit_contact(data: dict):
 async def get_admin_url():
     """Return dashboard URL for admin redirect"""
     return {
-        "url": "https://ghl-connect-2.preview.emergentagent.com",
+        "url": "https://form-fix-debug-1.preview.emergentagent.com",
         "tenant": TENANT_SLUG
     }
 

@@ -9,7 +9,7 @@
 
 import React, { useEffect } from "react";
 
-const DASHBOARD_URL = "https://ghl-connect-2.preview.emergentagent.com";
+const DASHBOARD_URL = "https://form-fix-debug-1.preview.emergentagent.com";
 
 const AdminRedirect = () => {
   useEffect(() => {
