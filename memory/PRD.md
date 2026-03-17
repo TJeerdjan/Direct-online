@@ -8,123 +8,77 @@ Build a standard backend/dashboard that Direct-Online can use for all clients, w
 
 ## Architecture
 
-### Multi-Tenant Setup
-```
-agency_master_db (Direct-Online)
-├── tenants (client registry)
-├── users (all users - agency + clients)
-├── plans (subscription plans)
-├── feedback (all client feedback)
-└── subscriptions (billing info)
+### Tech Stack (Current - Laravel)
+- **Framework:** Laravel 11 (PHP 8.2)
+- **Database:** SQLite (preview) / MySQL 8.3 (production on Hostinger)
+- **Frontend:** Blade templates + TailwindCSS CDN + Alpine.js
+- **Auth:** Session-based with custom middleware
+- **Hosting:** Hostinger Business Web Hosting (subdomain: app.direct-online.nl)
 
-client_{slug}_db (Per Client)
-├── portfolio
-├── testimonials
-├── pages
-├── form_submissions
-├── media
-└── settings
-```
+### Multi-Tenant Design
+Single database with `client_id` column on each tenant-scoped table.
 
-### Tech Stack
-- **Frontend**: React 19, TailwindCSS, shadcn/ui
-- **Backend**: FastAPI (Python)
-- **Database**: MongoDB (motor async driver)
-- **Auth**: JWT tokens
-- **i18n**: Dutch (primary), English
+### Database Schema
+- `klanten_DO` - Clients (id, naam, slug, domain, plan, status, api_key, modules)
+- `users_DO` - Client users (id, client_id, naam, email, password, role, taal)
+- `agency_users` - Agency admin users (id, naam, email, password, role)
+- `projects_DO` - Portfolio items (id, client_id, titel, slug, beschrijving, categorie, afbeelding, url, volgorde, is_actief)
+- `testimonials` - Client testimonials (id, client_id, naam, bedrijf, tekst, score, is_actief, volgorde)
+- `formulieren_DO` - Form submissions/inbox (id, client_id, naam, email, telefoon, bericht, status, is_gelezen, is_gearchiveerd)
+- `client_settings` - Site settings (id, client_id, site_naam, primaire_kleur, secundaire_kleur, over_tekst, social links)
+- `media_DO` - File uploads (id, client_id, bestandsnaam, pad, type, grootte)
+- `sessions` - Laravel session storage
 
 ## User Personas
 
 ### Agency Admin (Direct-Online)
 - Manages all clients/tenants
-- Creates client accounts
-- Views all feedback
-- Configures plans and modules
+- Creates client accounts with user credentials
+- Views dashboard stats (clients, messages)
+- Can impersonate clients to view their dashboard
 
 ### Client (Freelancers/Businesses)
 - Manages their website content
-- Portfolio, testimonials, pages
-- Receives form submissions
-- Provides feedback
+- Portfolio, testimonials management
+- Receives and manages form submissions (inbox)
+- Configures site settings (colors, social, contact)
 
-## Core Requirements
+## Implemented Features
 
-### ✅ Implemented (MVP - Feb 2026)
-
-**Authentication**
-- [x] Login/logout with JWT
-- [x] Role-based access (agency_admin, client)
-- [x] Language preference per user
-
-**Client Dashboard**
-- [x] Overview with stats
-- [x] Portfolio management (CRUD)
-- [x] Testimonials management (CRUD)
-- [x] Pages management (CRUD)
-- [x] Inbox (form submissions)
-- [x] Feedback submission
-- [x] Settings (site name, colors, social links)
-
-**Agency Admin Dashboard**
-- [x] Client/tenant management
-- [x] Create users for tenants
-- [x] View all feedback
-
-**Branding & UX**
-- [x] Direct-Online dark theme
-- [x] Logo integration
-- [x] Dutch/English translations
-- [x] Mobile-responsive sidebar
+### MVP - Phase 1 (March 17, 2026)
+- [x] Login/logout with session-based auth
+- [x] Role-based access (agency admin, client)
+- [x] Agency dashboard with stats
+- [x] Client management (CRUD) from agency panel
+- [x] Client impersonation (view as client)
+- [x] Client dashboard with stats + quick links
+- [x] Portfolio management (CRUD with image upload)
+- [x] Testimonials management (CRUD with star ratings)
+- [x] Inbox (form submissions with status filters)
+- [x] Message detail view with status change + archive
+- [x] Site settings (colors, social media, contact info)
+- [x] Dutch language UI throughout
+- [x] Direct-Online branding (dark theme: #1c2336, accent: #129387, CTA: #f59d0e)
+- [x] HTTPS proxy trust for Kubernetes/production
+- [x] Responsive sidebar layout
 
 ## Business Model
 
 ### Setup Fees (One-Time)
 | Client Type | Price | Delivery |
 |-------------|-------|----------|
-| Freelancer Portfolio | €495 | 24h |
-| Blog Website | €595 | 24-48h |
-| Business Website | €795 | 48-72h |
-| Webshop | €1,295 | 3-5 days |
+| Freelancer Portfolio | EUR495 | 24h |
+| Blog Website | EUR595 | 24-48h |
+| Business Website | EUR795 | 48-72h |
+| Webshop | EUR1,295 | 3-5 days |
 
 ### Monthly Plans
 | Plan | Price | Features |
 |------|-------|----------|
-| Early Bird | €10/mo | Limited 10 clients, 1.5yr |
-| Starter | €29/mo | Freelancers |
-| Growth | €59/mo | + Blog |
-| Webshop | €99/mo | + E-commerce |
-
-### Add-Ons
-- Blog Module: +€9/mo
-- Managed Content: +€49/mo
-- GHL Integration: +€39/mo
-- Email Relay: +€5/mo
-
-## Prioritized Backlog
-
-### P0 - Critical (Next Sprint)
-- [ ] Media library with upload functionality
-- [ ] Public form submission endpoint testing
-- [ ] GHL integration foundation
-
-### P1 - Important
-- [ ] Blog module (for Growth/Webshop plans)
-- [ ] Email notifications (form submissions)
-- [ ] Client website frontend templates
-- [ ] Media storage (S3/Cloudinary)
-
-### P2 - Nice to Have
-- [ ] Advanced analytics
-- [ ] Stripe payment integration
-- [ ] White-label dashboard option
-- [ ] Bulk import/export
-
-### Future / Phase 2
-- [ ] Full GHL CRM sync
-- [ ] Appointment booking integration
-- [ ] Chat widget integration
-- [ ] SMS campaigns via GHL
-- [ ] Webshop features (products, orders, payments)
+| Early Bird | EUR10/mo | Limited 10 clients, 1.5yr |
+| Starter | EUR29/mo | Freelancers |
+| Growth | EUR59/mo | + Blog |
+| Webshop | EUR99/mo | + E-commerce |
 
 ## Test Credentials
 
@@ -132,35 +86,44 @@ client_{slug}_db (Per Client)
 - Email: admin@direct-online.nl
 - Password: admin123
 
-**Demo Client:**
+**Demo Client 1:**
 - Email: jan@demo-fotograaf.nl
 - Password: demo123
 
-## API Endpoints
+**Demo Client 2:**
+- Email: pieter@gouden-aar.nl
+- Password: demo123
 
-### Public
-- `POST /api/public/form/{tenant_slug}` - Form submissions
-- `POST /api/seed` - Seed demo data
+## Prioritized Backlog
 
-### Auth
-- `POST /api/auth/login` - Login
-- `GET /api/auth/me` - Current user
-- `PUT /api/auth/language` - Update language
+### P0 - Contact Form Fix (UNRESOLVED)
+- [ ] Contact form on live client sites broken after migration (`klant_id` -> `client_id`)
+- Fix provided but user reports still not working. Needs server-side error log debugging.
 
-### Client Dashboard
-- `GET/POST/PUT/DELETE /api/portfolio`
-- `GET/POST/PUT/DELETE /api/testimonials`
-- `GET/POST/PUT/DELETE /api/pages`
-- `GET /api/inbox`, `PUT /api/inbox/{id}/read`
-- `GET/POST /api/feedback`
-- `GET/PUT /api/settings`
-- `GET /api/dashboard/stats`
+### P1 - Phase 2 (Next)
+- [ ] Blog module (Pages CRUD)
+- [ ] Email notifications on new form submissions
+- [ ] Media library with upload management
+- [ ] Client website frontend templates
+- [ ] Public API endpoints for client websites
 
-### Admin
-- `GET/POST /api/admin/tenants`
-- `GET/PUT /api/admin/tenants/{id}`
-- `POST /api/admin/tenants/{id}/user`
-- `GET /api/admin/feedback`
+### P2 - Feature & Plan Management
+- [ ] Module system (enable/disable features per plan)
+- [ ] Billing & subscription tracking
+- [ ] Multilingual support (Dutch/English toggle)
+
+### P3 - Integrations & E-commerce
+- [ ] GoHighLevel (GHL) CRM sync
+- [ ] Stripe/Mollie payment integration
+- [ ] Webshop features (Products, Orders, Payments)
+
+## Key Files
+- Routes: `/app/laravel-app/routes/web.php`
+- Controllers: `/app/laravel-app/app/Http/Controllers/`
+- Models: `/app/laravel-app/app/Models/`
+- Views: `/app/laravel-app/resources/views/`
+- Migrations: `/app/laravel-app/database/migrations/`
+- Seeder: `/app/laravel-app/database/seeders/DemoSeeder.php`
 
 ## Last Updated
-February 24, 2026 - MVP Complete
+March 17, 2026 - Laravel MVP Phase 1 Complete
