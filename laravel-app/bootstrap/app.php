@@ -1,0 +1,25 @@
+<?php
+
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+    )
+    ->withMiddleware(function (Middleware $middleware): void {
+        // Trust all proxies for Kubernetes ingress
+        $middleware->trustProxies(at: '*');
+        
+        $middleware->alias([
+            'auth.check' => \App\Http\Middleware\CheckAuth::class,
+            'auth.agency' => \App\Http\Middleware\CheckAgency::class,
+            'auth.client' => \App\Http\Middleware\CheckClient::class,
+        ]);
+    })
+    ->withExceptions(function (Exceptions $exceptions): void {
+        //
+    })->create();
