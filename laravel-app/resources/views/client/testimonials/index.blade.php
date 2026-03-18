@@ -15,25 +15,28 @@
             <div class="flex items-start justify-between">
                 <div class="flex items-start gap-3">
                     <div class="w-10 h-10 rounded-full bg-do-cta/10 flex items-center justify-center text-do-cta font-bold text-sm flex-shrink-0">
-                        {{ strtoupper(substr($testimonial->naam, 0, 1)) }}
+                        {{ strtoupper(substr($testimonial->client_name, 0, 1)) }}
                     </div>
                     <div>
                         <div class="flex items-center gap-2">
-                            <h3 class="text-sm font-semibold text-do-darker">{{ $testimonial->naam }}</h3>
-                            @if($testimonial->bedrijf)
-                            <span class="text-xs text-do-mid">&mdash; {{ $testimonial->bedrijf }}</span>
+                            <h3 class="text-sm font-semibold text-do-darker">{{ $testimonial->client_name }}</h3>
+                            @if($testimonial->client_company)
+                            <span class="text-xs text-do-mid">&mdash; {{ $testimonial->client_company }}</span>
                             @endif
                         </div>
+                        @if($testimonial->client_title)
+                        <p class="text-xs text-do-mid">{{ $testimonial->client_title }}</p>
+                        @endif
                         <div class="flex items-center gap-0.5 my-1">
                             @for($i = 1; $i <= 5; $i++)
-                                <i class="fa-solid fa-star text-xs {{ $i <= $testimonial->score ? 'text-do-cta' : 'text-gray-200' }}"></i>
+                                <i class="fa-solid fa-star text-xs {{ $i <= $testimonial->rating ? 'text-do-cta' : 'text-gray-200' }}"></i>
                             @endfor
                         </div>
-                        <p class="text-sm text-do-mid leading-relaxed">{{ $testimonial->tekst }}</p>
+                        <p class="text-sm text-do-mid leading-relaxed">{{ $testimonial->quote }}</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 flex-shrink-0 ml-4">
-                    <span class="w-2 h-2 rounded-full {{ $testimonial->is_actief ? 'bg-emerald-400' : 'bg-gray-300' }}"></span>
+                    <span class="w-2 h-2 rounded-full {{ $testimonial->is_visible ? 'bg-emerald-400' : 'bg-gray-300' }}"></span>
                     <a href="{{ route('client.testimonials.edit', $testimonial) }}" class="text-do-mid hover:text-do-accent" data-testid="edit-testimonial-{{ $testimonial->id }}">
                         <i class="fa-solid fa-pen-to-square text-sm"></i>
                     </a>

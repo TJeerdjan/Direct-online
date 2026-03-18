@@ -10,37 +10,43 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-do-mid mb-1">Naam *</label>
-                    <input type="text" name="naam" value="{{ old('naam', $testimonial->naam) }}" required
+                    <input type="text" name="client_name" value="{{ old('client_name', $testimonial->client_name) }}" required
                            class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none"
-                           data-testid="testimonial-naam-input">
+                           data-testid="testimonial-name-input">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-do-mid mb-1">Bedrijf</label>
-                    <input type="text" name="bedrijf" value="{{ old('bedrijf', $testimonial->bedrijf) }}"
+                    <input type="text" name="client_company" value="{{ old('client_company', $testimonial->client_company) }}"
                            class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none"
-                           data-testid="testimonial-bedrijf-input">
+                           data-testid="testimonial-company-input">
                 </div>
             </div>
             <div>
+                <label class="block text-sm font-medium text-do-mid mb-1">Functie</label>
+                <input type="text" name="client_title" value="{{ old('client_title', $testimonial->client_title) }}"
+                       class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none"
+                       data-testid="testimonial-title-input">
+            </div>
+            <div>
                 <label class="block text-sm font-medium text-do-mid mb-1">Tekst *</label>
-                <textarea name="tekst" rows="4" required
+                <textarea name="quote" rows="4" required
                           class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none"
-                          data-testid="testimonial-tekst-input">{{ old('tekst', $testimonial->tekst) }}</textarea>
+                          data-testid="testimonial-quote-input">{{ old('quote', $testimonial->quote) }}</textarea>
             </div>
             <div>
                 <label class="block text-sm font-medium text-do-mid mb-1">Score</label>
-                <select name="score" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none" data-testid="testimonial-score-select">
+                <select name="rating" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none" data-testid="testimonial-rating-select">
                     @for($i = 5; $i >= 1; $i--)
-                        <option value="{{ $i }}" {{ old('score', $testimonial->score) == $i ? 'selected' : '' }}>{{ $i }} {{ str_repeat('★', $i) }}</option>
+                        <option value="{{ $i }}" {{ old('rating', $testimonial->rating) == $i ? 'selected' : '' }}>{{ $i }} {{ str_repeat('★', $i) }}</option>
                     @endfor
                 </select>
             </div>
             <div class="flex items-center gap-2">
                 <label class="flex items-center gap-2 text-sm text-do-mid cursor-pointer">
-                    <input type="hidden" name="is_actief" value="0">
-                    <input type="checkbox" name="is_actief" value="1" {{ $testimonial->is_actief ? 'checked' : '' }}
-                           class="rounded border-gray-300 text-do-accent focus:ring-do-accent" data-testid="testimonial-actief-toggle">
-                    Actief op website
+                    <input type="hidden" name="is_visible" value="0">
+                    <input type="checkbox" name="is_visible" value="1" {{ $testimonial->is_visible ? 'checked' : '' }}
+                           class="rounded border-gray-300 text-do-accent focus:ring-do-accent" data-testid="testimonial-visible-toggle">
+                    Zichtbaar op website
                 </label>
             </div>
             <div class="flex items-center gap-3 pt-2">

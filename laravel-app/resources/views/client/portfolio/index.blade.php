@@ -12,27 +12,21 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @foreach($projects as $project)
         <div class="bg-white rounded-xl border border-gray-100 overflow-hidden group" data-testid="project-card-{{ $project->id }}">
-            @if($project->afbeelding)
-            <div class="h-40 bg-gray-100 overflow-hidden">
-                <img src="{{ $project->afbeelding }}" alt="{{ $project->titel }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-            </div>
-            @else
             <div class="h-40 bg-gradient-to-br from-do-dark to-do-darker flex items-center justify-center">
                 <i class="fa-solid fa-image text-2xl text-white/20"></i>
             </div>
-            @endif
             <div class="p-4">
                 <div class="flex items-start justify-between mb-2">
                     <div>
-                        <h3 class="text-sm font-semibold text-do-darker">{{ $project->titel }}</h3>
-                        @if($project->categorie)
-                        <span class="text-xs text-do-accent">{{ $project->categorie }}</span>
+                        <h3 class="text-sm font-semibold text-do-darker">{{ $project->title }}</h3>
+                        @if($project->category)
+                        <span class="text-xs text-do-accent">{{ $project->category }}</span>
                         @endif
                     </div>
-                    <span class="w-2 h-2 rounded-full {{ $project->is_actief ? 'bg-emerald-400' : 'bg-gray-300' }}" title="{{ $project->is_actief ? 'Actief' : 'Inactief' }}"></span>
+                    <span class="w-2 h-2 rounded-full {{ $project->is_visible ? 'bg-emerald-400' : 'bg-gray-300' }}" title="{{ $project->is_visible ? 'Zichtbaar' : 'Verborgen' }}"></span>
                 </div>
-                @if($project->beschrijving)
-                <p class="text-xs text-do-mid mb-3 line-clamp-2">{{ $project->beschrijving }}</p>
+                @if($project->description)
+                <p class="text-xs text-do-mid mb-3 line-clamp-2">{{ $project->description }}</p>
                 @endif
                 <div class="flex items-center gap-2 pt-2 border-t border-gray-50">
                     <a href="{{ route('client.portfolio.edit', $project) }}" class="text-xs text-do-accent hover:underline" data-testid="edit-project-{{ $project->id }}">

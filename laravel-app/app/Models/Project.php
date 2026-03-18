@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     protected $table = 'projects_DO';
-    protected $fillable = ['client_id', 'titel', 'slug', 'beschrijving', 'categorie', 'afbeelding', 'url', 'volgorde', 'is_actief'];
-    protected $casts = ['is_actief' => 'boolean'];
+    protected $fillable = ['client_id', 'title', 'slug', 'description', 'image_id', 'external_url', 'category', 'sort_order', 'is_visible'];
+    protected $casts = ['is_visible' => 'boolean'];
 
     public function client()
     {

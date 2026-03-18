@@ -29,11 +29,11 @@ class LoginController extends Controller
 
         // Try agency login first
         $agency = AgencyUser::where('email', $request->email)->first();
-        if ($agency && Hash::check($request->password, $agency->password)) {
+        if ($agency && Hash::check($request->password, $agency->password_hash)) {
             session([
                 'user_id' => $agency->id,
                 'user_type' => 'agency',
-                'user_naam' => $agency->naam,
+                'user_naam' => $agency->name,
                 'user_email' => $agency->email,
                 'user_role' => $agency->role,
             ]);
@@ -42,7 +42,7 @@ class LoginController extends Controller
 
         // Try client login
         $client_user = ClientUser::with('client')->where('email', $request->email)->first();
-        if ($client_user && Hash::check($request->password, $client_user->password)) {
+        if ($client_user && Hash::check($request->password, $client_user->password_hash)) {
             session([
                 'user_id' => $client_user->id,
                 'user_type' => 'client',
@@ -50,7 +50,6 @@ class LoginController extends Controller
                 'user_email' => $client_user->email,
                 'client_id' => $client_user->client_id,
                 'client_naam' => $client_user->client->naam ?? '',
-                'taal' => $client_user->taal ?? 'nl',
             ]);
             return redirect()->route('client.dashboard');
         }

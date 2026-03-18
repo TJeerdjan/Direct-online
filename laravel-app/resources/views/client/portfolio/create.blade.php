@@ -8,27 +8,27 @@
             @csrf
             <div>
                 <label class="block text-sm font-medium text-do-mid mb-1">Titel *</label>
-                <input type="text" name="titel" value="{{ old('titel') }}" required
+                <input type="text" name="title" value="{{ old('title') }}" required
                        class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none"
-                       data-testid="project-titel-input">
-                @error('titel') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                       data-testid="project-title-input">
+                @error('title') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
             </div>
             <div>
                 <label class="block text-sm font-medium text-do-mid mb-1">Beschrijving</label>
-                <textarea name="beschrijving" rows="4"
+                <textarea name="description" rows="4"
                           class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none"
-                          data-testid="project-beschrijving-input">{{ old('beschrijving') }}</textarea>
+                          data-testid="project-description-input">{{ old('description') }}</textarea>
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-do-mid mb-1">Categorie</label>
-                    <input type="text" name="categorie" value="{{ old('categorie') }}" placeholder="bijv. Bruiloften"
+                    <input type="text" name="category" value="{{ old('category') }}" placeholder="bijv. Bruiloften"
                            class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none"
-                           data-testid="project-categorie-input">
+                           data-testid="project-category-input">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-do-mid mb-1">URL</label>
-                    <input type="url" name="url" value="{{ old('url') }}" placeholder="https://..."
+                    <input type="url" name="external_url" value="{{ old('external_url') }}" placeholder="https://..."
                            class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none"
                            data-testid="project-url-input">
                 </div>

@@ -12,7 +12,7 @@ class SettingsController extends Controller
     {
         $settings = ClientSetting::firstOrCreate(
             ['client_id' => session('client_id')],
-            ['site_naam' => session('client_naam')]
+            ['site_name' => session('client_naam')]
         );
         return view('client.settings.index', compact('settings'));
     }
@@ -20,21 +20,20 @@ class SettingsController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'site_naam' => 'nullable|string|max:255',
-            'primaire_kleur' => 'nullable|string|max:7',
-            'secundaire_kleur' => 'nullable|string|max:7',
-            'over_tekst' => 'nullable|string',
-            'facebook' => 'nullable|url|max:500',
-            'instagram' => 'nullable|url|max:500',
-            'linkedin' => 'nullable|url|max:500',
-            'telefoon' => 'nullable|string|max:50',
-            'email' => 'nullable|email|max:255',
+            'site_name' => 'nullable|string|max:255',
+            'tagline' => 'nullable|string|max:255',
+            'primary_color' => 'nullable|string|max:7',
+            'accent_color' => 'nullable|string|max:7',
+            'social_facebook' => 'nullable|url|max:255',
+            'social_instagram' => 'nullable|url|max:255',
+            'social_linkedin' => 'nullable|url|max:255',
+            'social_twitter' => 'nullable|url|max:255',
         ]);
 
         $settings = ClientSetting::where('client_id', session('client_id'))->first();
         $settings->update($request->only([
-            'site_naam', 'primaire_kleur', 'secundaire_kleur', 'over_tekst',
-            'facebook', 'instagram', 'linkedin', 'telefoon', 'email'
+            'site_name', 'tagline', 'primary_color', 'accent_color',
+            'social_facebook', 'social_instagram', 'social_linkedin', 'social_twitter'
         ]));
 
         return back()->with('success', 'Instellingen opgeslagen');

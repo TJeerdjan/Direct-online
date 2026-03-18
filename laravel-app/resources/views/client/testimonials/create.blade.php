@@ -9,28 +9,34 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-do-mid mb-1">Naam *</label>
-                    <input type="text" name="naam" value="{{ old('naam') }}" required
+                    <input type="text" name="client_name" value="{{ old('client_name') }}" required
                            class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none"
-                           data-testid="testimonial-naam-input">
+                           data-testid="testimonial-name-input">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-do-mid mb-1">Bedrijf</label>
-                    <input type="text" name="bedrijf" value="{{ old('bedrijf') }}"
+                    <input type="text" name="client_company" value="{{ old('client_company') }}"
                            class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none"
-                           data-testid="testimonial-bedrijf-input">
+                           data-testid="testimonial-company-input">
                 </div>
             </div>
             <div>
+                <label class="block text-sm font-medium text-do-mid mb-1">Functie</label>
+                <input type="text" name="client_title" value="{{ old('client_title') }}" placeholder="bijv. Eigenaar"
+                       class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none"
+                       data-testid="testimonial-title-input">
+            </div>
+            <div>
                 <label class="block text-sm font-medium text-do-mid mb-1">Tekst *</label>
-                <textarea name="tekst" rows="4" required
+                <textarea name="quote" rows="4" required
                           class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none"
-                          data-testid="testimonial-tekst-input">{{ old('tekst') }}</textarea>
+                          data-testid="testimonial-quote-input">{{ old('quote') }}</textarea>
             </div>
             <div>
                 <label class="block text-sm font-medium text-do-mid mb-1">Score (1-5 sterren)</label>
-                <select name="score" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none" data-testid="testimonial-score-select">
+                <select name="rating" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-do-accent focus:border-do-accent outline-none" data-testid="testimonial-rating-select">
                     @for($i = 5; $i >= 1; $i--)
-                        <option value="{{ $i }}" {{ old('score', 5) == $i ? 'selected' : '' }}>{{ $i }} {{ str_repeat('★', $i) }}</option>
+                        <option value="{{ $i }}" {{ old('rating', 5) == $i ? 'selected' : '' }}>{{ $i }} {{ str_repeat('★', $i) }}</option>
                     @endfor
                 </select>
             </div>

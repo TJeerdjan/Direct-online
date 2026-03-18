@@ -32,7 +32,7 @@ class ClientController extends Controller
             'contact_email' => 'nullable|email|max:255',
             'plan' => 'required|in:early_bird,starter,growth,webshop',
             'user_naam' => 'required|string|max:255',
-            'user_email' => 'required|email|unique:users_DO,email',
+            'user_email' => 'required|email',
             'user_password' => 'required|min:6',
         ]);
 
@@ -51,13 +51,13 @@ class ClientController extends Controller
             'client_id' => $client->id,
             'naam' => $request->user_naam,
             'email' => $request->user_email,
-            'password' => Hash::make($request->user_password),
-            'role' => 'client_admin',
+            'password_hash' => Hash::make($request->user_password),
+            'role' => 'admin',
         ]);
 
         ClientSetting::create([
             'client_id' => $client->id,
-            'site_naam' => $request->naam,
+            'site_name' => $request->naam,
         ]);
 
         return redirect()->route('agency.clients.index')->with('success', 'Klant succesvol aangemaakt');
@@ -102,7 +102,6 @@ class ClientController extends Controller
             'user_email' => $user->email,
             'client_id' => $client->id,
             'client_naam' => $client->naam,
-            'taal' => $user->taal ?? 'nl',
         ]);
 
         return redirect()->route('client.dashboard');

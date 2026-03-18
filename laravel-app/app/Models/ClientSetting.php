@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class ClientSetting extends Model
 {
     protected $table = 'client_settings';
-    protected $fillable = ['client_id', 'site_naam', 'logo', 'primaire_kleur', 'secundaire_kleur', 'over_tekst', 'facebook', 'instagram', 'linkedin', 'twitter', 'telefoon', 'email'];
+    public $timestamps = false;
+    const UPDATED_AT = 'updated_at';
+    protected $fillable = ['client_id', 'site_name', 'tagline', 'logo_id', 'primary_color', 'accent_color', 'social_instagram', 'social_linkedin', 'social_facebook', 'social_twitter'];
 
     public function client()
     {
