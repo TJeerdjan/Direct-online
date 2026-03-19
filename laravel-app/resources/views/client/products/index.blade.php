@@ -1,9 +1,14 @@
 @extends('layouts.app')
 @section('page_title', 'Producten')
 @section('header_actions')
-    <a href="{{ route('client.products.create') }}" class="bg-do-accent hover:bg-do-accent/90 text-white text-sm font-medium px-4 py-2 rounded-lg transition" data-testid="add-product-btn">
-        <i class="fa-solid fa-plus mr-1"></i> Nieuw product
-    </a>
+    <div class="flex items-center gap-2">
+        <a href="{{ route('client.products.bulk-import') }}" class="bg-do-dark hover:bg-do-darker text-white text-sm font-medium px-4 py-2 rounded-lg transition" data-testid="bulk-import-btn">
+            <i class="fa-solid fa-file-import mr-1"></i> Bulk importeren
+        </a>
+        <a href="{{ route('client.products.create') }}" class="bg-do-accent hover:bg-do-accent/90 text-white text-sm font-medium px-4 py-2 rounded-lg transition" data-testid="add-product-btn">
+            <i class="fa-solid fa-plus mr-1"></i> Nieuw product
+        </a>
+    </div>
 @endsection
 
 @section('content')

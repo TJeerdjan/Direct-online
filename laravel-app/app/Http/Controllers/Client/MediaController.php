@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Media;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -58,6 +59,16 @@ class MediaController extends Controller
             'is_active' => true,
         ]);
 
+        // Auto-match: link this image to products with matching image_name
+        $autoLinked = 0;
+        if ($mediaType === 'image') {
+            $autoLinked = Product::where('client_id', $clientId)
+                ->whereNull('image_id')
+                ->whereNotNull('image_name')
+                ->whereRaw('LOWER(image_name) = ?', [strtolower($originalName)])
+                ->update(['image_id' => $media->id]);
+        }
+
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'status' => 'success',
@@ -67,10 +78,16 @@ class MediaController extends Controller
                     'url' => $media->url,
                     'media_type' => $media->media_type,
                 ],
+                'auto_linked' => $autoLinked,
             ]);
         }
 
-        return redirect()->route('client.media.index')->with('success', 'Bestand geupload');
+        $msg = 'Bestand geupload';
+        if ($autoLinked > 0) {
+            $msg .= ". Automatisch gekoppeld aan {$autoLinked} product" . ($autoLinked > 1 ? 'en' : '') . '.';
+        }
+
+        return redirect()->route('client.media.index')->with('success', $msg);
     }
 
     public function update(Request $request, Media $medium)

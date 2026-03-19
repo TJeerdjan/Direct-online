@@ -10,7 +10,7 @@ class Product extends Model
     protected $fillable = [
         'client_id', 'title', 'slug', 'description', 'price', 'currency',
         'category', 'brand', 'sku', 'stock_quantity', 'weight', 'variants',
-        'image_id', 'is_available', 'is_visible', 'sort_order'
+        'image_id', 'image_name', 'is_available', 'is_visible', 'sort_order'
     ];
     protected $casts = [
         'price' => 'decimal:2',

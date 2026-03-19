@@ -71,6 +71,10 @@ Route::prefix('client')->middleware(['auth.check', 'auth.client'])->group(functi
     Route::get('/products', [ProductController::class, 'index'])->name('client.products.index');
     Route::get('/products/create', [ProductController::class, 'create'])->name('client.products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('client.products.store');
+    Route::get('/products/template', [ProductController::class, 'downloadTemplate'])->name('client.products.template');
+    Route::get('/products/bulk-import', [ProductController::class, 'bulkImport'])->name('client.products.bulk-import');
+    Route::post('/products/bulk-import/preview', [ProductController::class, 'bulkImportPreview'])->name('client.products.bulk-import.preview');
+    Route::post('/products/bulk-import/store', [ProductController::class, 'bulkImportStore'])->name('client.products.bulk-import.store');
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('client.products.edit');
     Route::put('/products/{product}', [ProductController::class, 'update'])->name('client.products.update');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('client.products.destroy');
