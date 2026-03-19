@@ -5,7 +5,7 @@ A reusable template for building client websites that connect to the Direct-Onli
 ## 🚀 Quick Start
 
 ### 1. Create Tenant in Direct-Online Dashboard
-1. Login to https://form-fix-debug-1.preview.emergentagent.com
+1. Login to https://agency-dashboard-61.preview.emergentagent.com
 2. Go to **Klanten** → **+ Klant toevoegen**
 3. Fill in client details and save
 4. Create a user account for the client
@@ -46,7 +46,7 @@ client_template/
 
 ### Backend `.env`
 ```env
-DIRECT_ONLINE_API=https://form-fix-debug-1.preview.emergentagent.com/api
+DIRECT_ONLINE_API=https://agency-dashboard-61.preview.emergentagent.com/api
 TENANT_SLUG=client-slug-here
 ```
 
@@ -114,7 +114,7 @@ Build a portfolio website for [CLIENT NAME], a [INDUSTRY/PROFESSION].
 ## Technical Setup
 Connect to Direct-Online CMS backend:
 - TENANT_SLUG=[client-slug]
-- DIRECT_ONLINE_API=https://form-fix-debug-1.preview.emergentagent.com/api
+- DIRECT_ONLINE_API=https://agency-dashboard-61.preview.emergentagent.com/api
 
 ## Required Pages
 1. **Home** - Hero, featured portfolio, testimonials, CTA
