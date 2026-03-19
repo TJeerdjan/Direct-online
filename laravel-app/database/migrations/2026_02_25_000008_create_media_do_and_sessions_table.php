@@ -11,12 +11,16 @@ return new class extends Migration
         Schema::create('media_DO', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client_id');
-            $table->string('bestandsnaam', 255);
-            $table->string('pad', 500);
-            $table->string('type', 50)->nullable();
-            $table->integer('grootte')->nullable();
-            $table->string('alt_tekst', 255)->nullable();
-            $table->timestamps();
+            $table->string('file_name', 255);
+            $table->string('file_path', 500);
+            $table->string('alt_text', 255)->nullable();
+            $table->enum('media_type', ['image', 'video', 'document'])->default('image')->nullable();
+            $table->string('mime_type', 100)->nullable();
+            $table->integer('file_size')->nullable();
+            $table->string('usage_key', 100)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
+            $table->timestamp('uploaded_at')->useCurrent();
+            $table->timestamp('updated_at')->nullable();
             $table->foreign('client_id')->references('id')->on('klanten_DO')->onDelete('cascade');
         });
 

@@ -11,14 +11,14 @@ return new class extends Migration
         Schema::create('projects_DO', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client_id');
-            $table->string('titel', 255);
-            $table->string('slug', 255)->nullable();
-            $table->text('beschrijving')->nullable();
-            $table->string('categorie', 100)->nullable();
-            $table->string('afbeelding', 500)->nullable();
-            $table->string('url', 500)->nullable();
-            $table->integer('volgorde')->default(0)->nullable();
-            $table->boolean('is_actief')->default(true)->nullable();
+            $table->string('title', 200);
+            $table->string('slug', 220);
+            $table->text('description')->nullable();
+            $table->unsignedBigInteger('image_id')->nullable();
+            $table->string('external_url', 500)->nullable();
+            $table->string('category', 100)->nullable();
+            $table->integer('sort_order')->default(0)->nullable();
+            $table->boolean('is_visible')->default(true)->nullable();
             $table->timestamps();
             $table->foreign('client_id')->references('id')->on('klanten_DO')->onDelete('cascade');
         });

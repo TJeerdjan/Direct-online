@@ -1,13 +1,14 @@
 <?php
 /**
  * Public Data API — Direct-Online
- * Returns portfolio, testimonials, and settings for a client website.
+ * Returns portfolio, testimonials, products, and settings for a client website.
  * Place alongside db.php on each client site.
  *
  * Usage:
  *   api.php?key=API_KEY                    → all public data
  *   api.php?key=API_KEY&type=portfolio     → portfolio only
  *   api.php?key=API_KEY&type=testimonials  → testimonials only
+ *   api.php?key=API_KEY&type=products      → products only
  *   api.php?key=API_KEY&type=settings      → site settings only
  */
 
@@ -51,16 +52,22 @@ $response = ["status" => "success", "client" => $klant['naam']];
 // Portfolio
 if ($type === 'all' || $type === 'portfolio') {
     $stmt = $conn->prepare("
-        SELECT id, title, slug, description, category, external_url, sort_order
-        FROM projects_DO
-        WHERE client_id = ? AND is_visible = 1
-        ORDER BY sort_order ASC
+        SELECT p.id, p.title, p.slug, p.description, p.category, p.external_url, p.sort_order,
+               m.file_path AS image_path
+        FROM projects_DO p
+        LEFT JOIN media_DO m ON p.image_id = m.id
+        WHERE p.client_id = ? AND p.is_visible = 1
+        ORDER BY p.sort_order ASC
     ");
     $stmt->bind_param("i", $client_id);
     $stmt->execute();
     $result = $stmt->get_result();
     $portfolio = [];
     while ($row = $result->fetch_assoc()) {
+        if ($row['image_path']) {
+            $row['image_url'] = '/uploads/' . $row['image_path'];
+        }
+        unset($row['image_path']);
         $portfolio[] = $row;
     }
     $response['portfolio'] = $portfolio;
@@ -82,6 +89,33 @@ if ($type === 'all' || $type === 'testimonials') {
         $testimonials[] = $row;
     }
     $response['testimonials'] = $testimonials;
+}
+
+// Products
+if ($type === 'all' || $type === 'products') {
+    $stmt = $conn->prepare("
+        SELECT p.id, p.title, p.slug, p.description, p.price, p.currency, p.category,
+               p.brand, p.sku, p.stock_quantity, p.weight, p.is_available, p.sort_order,
+               m.file_path AS image_path
+        FROM products p
+        LEFT JOIN media_DO m ON p.image_id = m.id
+        WHERE p.client_id = ? AND p.is_visible = 1
+        ORDER BY p.sort_order ASC
+    ");
+    $stmt->bind_param("i", $client_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $products = [];
+    while ($row = $result->fetch_assoc()) {
+        if ($row['image_path']) {
+            $row['image_url'] = '/uploads/' . $row['image_path'];
+        }
+        unset($row['image_path']);
+        $row['price'] = (float)$row['price'];
+        $row['is_available'] = (bool)$row['is_available'];
+        $products[] = $row;
+    }
+    $response['products'] = $products;
 }
 
 // Settings

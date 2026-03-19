@@ -8,6 +8,8 @@ use App\Http\Controllers\Client\PortfolioController;
 use App\Http\Controllers\Client\TestimonialController;
 use App\Http\Controllers\Client\InboxController;
 use App\Http\Controllers\Client\SettingsController;
+use App\Http\Controllers\Client\MediaController;
+use App\Http\Controllers\Client\ProductController;
 use Illuminate\Support\Facades\Route;
 
 // Auth
@@ -57,4 +59,19 @@ Route::prefix('client')->middleware(['auth.check', 'auth.client'])->group(functi
     // Settings
     Route::get('/settings', [SettingsController::class, 'index'])->name('client.settings.index');
     Route::put('/settings', [SettingsController::class, 'update'])->name('client.settings.update');
+
+    // Media Library
+    Route::get('/media', [MediaController::class, 'index'])->name('client.media.index');
+    Route::post('/media', [MediaController::class, 'store'])->name('client.media.store');
+    Route::put('/media/{medium}', [MediaController::class, 'update'])->name('client.media.update');
+    Route::delete('/media/{medium}', [MediaController::class, 'destroy'])->name('client.media.destroy');
+    Route::get('/media/json', [MediaController::class, 'json'])->name('client.media.json');
+
+    // Products (Webshop)
+    Route::get('/products', [ProductController::class, 'index'])->name('client.products.index');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('client.products.create');
+    Route::post('/products', [ProductController::class, 'store'])->name('client.products.store');
+    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('client.products.edit');
+    Route::put('/products/{product}', [ProductController::class, 'update'])->name('client.products.update');
+    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('client.products.destroy');
 });

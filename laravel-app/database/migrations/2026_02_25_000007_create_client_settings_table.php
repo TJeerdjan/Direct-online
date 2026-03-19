@@ -11,18 +11,16 @@ return new class extends Migration
         Schema::create('client_settings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client_id')->unique();
-            $table->string('site_naam', 255)->nullable();
-            $table->string('logo', 500)->nullable();
-            $table->string('primaire_kleur', 7)->default('#129387')->nullable();
-            $table->string('secundaire_kleur', 7)->default('#f59d0e')->nullable();
-            $table->text('over_tekst')->nullable();
-            $table->string('facebook', 500)->nullable();
-            $table->string('instagram', 500)->nullable();
-            $table->string('linkedin', 500)->nullable();
-            $table->string('twitter', 500)->nullable();
-            $table->string('telefoon', 50)->nullable();
-            $table->string('email', 255)->nullable();
-            $table->timestamps();
+            $table->string('site_name', 255)->nullable();
+            $table->string('tagline', 255)->nullable();
+            $table->unsignedBigInteger('logo_id')->nullable();
+            $table->string('primary_color', 7)->default('#129387')->nullable();
+            $table->string('accent_color', 7)->default('#f59d0e')->nullable();
+            $table->string('social_instagram', 255)->nullable();
+            $table->string('social_linkedin', 255)->nullable();
+            $table->string('social_facebook', 255)->nullable();
+            $table->string('social_twitter', 255)->nullable();
+            $table->timestamp('updated_at')->nullable();
             $table->foreign('client_id')->references('id')->on('klanten_DO')->onDelete('cascade');
         });
     }

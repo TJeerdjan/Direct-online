@@ -34,4 +34,14 @@ class Client extends Model
     {
         return $this->hasOne(ClientSetting::class, 'client_id');
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'client_id');
+    }
+
+    public function media()
+    {
+        return $this->hasMany(Media::class, 'client_id');
+    }
 }

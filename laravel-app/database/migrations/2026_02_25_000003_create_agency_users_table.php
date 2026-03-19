@@ -10,10 +10,11 @@ return new class extends Migration
     {
         Schema::create('agency_users', function (Blueprint $table) {
             $table->id();
-            $table->string('naam', 255);
+            $table->string('name', 255);
             $table->string('email', 255)->unique();
-            $table->string('password', 255);
-            $table->enum('role', ['super_admin', 'admin', 'medewerker'])->default('admin')->nullable();
+            $table->string('password_hash', 255);
+            $table->enum('role', ['super_admin', 'admin'])->default('admin')->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

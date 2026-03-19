@@ -11,11 +11,12 @@ return new class extends Migration
         Schema::create('users_DO', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client_id');
-            $table->string('naam', 255);
-            $table->string('email', 255)->unique();
-            $table->string('password', 255);
-            $table->enum('role', ['client_admin', 'client_user'])->default('client_admin')->nullable();
-            $table->string('taal', 5)->default('nl')->nullable();
+            $table->string('email', 150);
+            $table->string('naam', 255)->nullable();
+            $table->string('password_hash', 255);
+            $table->enum('role', ['client', 'admin', 'editor'])->default('client')->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
+            $table->datetime('last_login_at')->nullable();
             $table->timestamps();
             $table->foreign('client_id')->references('id')->on('klanten_DO')->onDelete('cascade');
         });

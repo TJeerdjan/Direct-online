@@ -72,8 +72,14 @@
                 <a href="{{ route('client.portfolio.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm {{ request()->routeIs('client.portfolio.*') ? 'active' : 'text-white/70' }}" data-testid="nav-portfolio">
                     <i class="fa-solid fa-images w-5 text-center"></i> Portfolio
                 </a>
+                <a href="{{ route('client.products.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm {{ request()->routeIs('client.products.*') ? 'active' : 'text-white/70' }}" data-testid="nav-products">
+                    <i class="fa-solid fa-store w-5 text-center"></i> Producten
+                </a>
                 <a href="{{ route('client.testimonials.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm {{ request()->routeIs('client.testimonials.*') ? 'active' : 'text-white/70' }}" data-testid="nav-testimonials">
                     <i class="fa-solid fa-star w-5 text-center"></i> Testimonials
+                </a>
+                <a href="{{ route('client.media.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm {{ request()->routeIs('client.media.*') ? 'active' : 'text-white/70' }}" data-testid="nav-media">
+                    <i class="fa-solid fa-photo-film w-5 text-center"></i> Media
                 </a>
                 <a href="{{ route('client.inbox.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm {{ request()->routeIs('client.inbox.*') ? 'active' : 'text-white/70' }}" data-testid="nav-inbox">
                     <i class="fa-solid fa-inbox w-5 text-center"></i> Inbox
