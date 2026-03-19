@@ -25,7 +25,7 @@ Run this SQL in **phpMyAdmin** (Hostinger → hPanel → Databases → phpMyAdmi
 ```sql
 CREATE TABLE IF NOT EXISTS `products` (
     `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `client_id` BIGINT UNSIGNED NOT NULL,
+    `client_id` INT UNSIGNED NOT NULL,
     `title` VARCHAR(255) NOT NULL,
     `slug` VARCHAR(255) NOT NULL,
     `description` TEXT NULL,
@@ -38,16 +38,23 @@ CREATE TABLE IF NOT EXISTS `products` (
     `weight` DECIMAL(8,2) NULL,
     `variants` JSON NULL,
     `image_id` BIGINT UNSIGNED NULL,
+    `image_name` VARCHAR(255) NULL,
     `is_available` TINYINT(1) NOT NULL DEFAULT 1,
     `is_visible` TINYINT(1) NOT NULL DEFAULT 1,
     `sort_order` INT NOT NULL DEFAULT 0,
     `created_at` TIMESTAMP NULL,
     `updated_at` TIMESTAMP NULL,
-    FOREIGN KEY (`client_id`) REFERENCES `klanten_DO`(`id`) ON DELETE CASCADE,
     INDEX `products_client_id_is_visible_index` (`client_id`, `is_visible`),
     INDEX `products_category_index` (`category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ```
+
+> **Note:** `client_id` is `INT UNSIGNED` to match your `klanten_DO.id` column type. Foreign key constraint is omitted to avoid type mismatch errors.
+
+> **If you already created the `products` table** from the earlier guide (without `image_name`), run:
+> ```sql
+> ALTER TABLE `products` ADD COLUMN `image_name` VARCHAR(255) NULL AFTER `image_id`;
+> ```
 
 ---
 
@@ -132,6 +139,8 @@ Upload these files from the download to your Hostinger installation. The paths b
 | `resources/views/client/products/index.blade.php` | `resources/views/client/products/index.blade.php` |
 | `resources/views/client/products/create.blade.php` | `resources/views/client/products/create.blade.php` |
 | `resources/views/client/products/edit.blade.php` | `resources/views/client/products/edit.blade.php` |
+| `resources/views/client/products/bulk-import.blade.php` | `resources/views/client/products/bulk-import.blade.php` |
+| `resources/views/client/products/bulk-import-preview.blade.php` | `resources/views/client/products/bulk-import-preview.blade.php` |
 | `resources/views/client/media/index.blade.php` | `resources/views/client/media/index.blade.php` |
 
 > **Create the directories first** if they don't exist:
@@ -203,6 +212,8 @@ Use this checklist while uploading:
 - [ ] File: `resources/views/client/products/index.blade.php` — NEW
 - [ ] File: `resources/views/client/products/create.blade.php` — NEW
 - [ ] File: `resources/views/client/products/edit.blade.php` — NEW
+- [ ] File: `resources/views/client/products/bulk-import.blade.php` — NEW
+- [ ] File: `resources/views/client/products/bulk-import-preview.blade.php` — NEW
 - [ ] File: `resources/views/client/media/index.blade.php` — NEW
 - [ ] File: `routes/web.php` — REPLACE
 - [ ] File: `resources/views/layouts/app.blade.php` — REPLACE

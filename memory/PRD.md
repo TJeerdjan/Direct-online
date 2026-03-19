@@ -27,7 +27,7 @@ Single MySQL database, `client_id` column on every tenant-scoped table.
 | `formulieren_DO` | Form submissions | client_id, naam, email, bericht, status, is_gelezen |
 | `client_settings` | Site settings | client_id, site_name, tagline, primary_color, accent_color, socials |
 | `media_DO` | File uploads | client_id, file_name, file_path, media_type, mime_type, file_size, is_active |
-| `products` | Webshop products | client_id, title, slug, price, currency, category, brand, sku, image_id |
+| `products` | Webshop products | client_id, title, slug, price, currency, category, brand, sku, image_id, image_name |
 | `sessions` | Laravel sessions | id, user_id, payload |
 
 ## What's Been Built
@@ -45,7 +45,9 @@ Single MySQL database, `client_id` column on every tenant-scoped table.
 - [x] Message detail: read message, change status, archive
 - [x] Site Settings: website name, tagline, colors (picker), social media links
 - [x] Products/Webshop CRUD (title, description, price, currency, category, brand, SKU, stock, weight, image)
+- [x] Bulk Product Import via CSV (template download, upload, preview, confirm, auto-delimiter detection)
 - [x] Media Library (upload images/videos/PDFs, grid view, media picker in product forms)
+- [x] Auto-match: uploading images to media library automatically links to products by matching filename
 - [x] Dutch language UI throughout
 - [x] Responsive sidebar layout with Direct-Online branding (#1c2336, #129387, #f59d0e)
 
@@ -57,7 +59,7 @@ Single MySQL database, `client_id` column on every tenant-scoped table.
 ### Deployment
 - [x] Production `.env` configured for Hostinger MySQL
 - [x] Step-by-step deployment guide (`DEPLOYMENT.md`)
-- [x] Step-by-step upgrade guide for v2 Webshop features (`UPGRADE-V2-WEBSHOP.md`)
+- [x] Step-by-step upgrade guide for v2 Webshop features (`UPGRADE-V2-WEBSHOP.md`) — includes bulk import
 - [x] Root `.htaccess` for subdomain routing
 
 ### Bug Fixes Applied
