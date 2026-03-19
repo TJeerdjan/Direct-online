@@ -130,14 +130,18 @@ class ProductController extends Controller
         $fileName = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
                     . '.' . $file->getClientOriginalExtension();
 
+        // Store metadata before moving the file (move invalidates the UploadedFile object)
+        $originalName = $file->getClientOriginalName();
+        $mimeType = $file->getClientMimeType();
+
         $file->move(public_path($dir), $fileName);
 
         return Media::create([
             'client_id' => $clientId,
-            'file_name' => $file->getClientOriginalName(),
+            'file_name' => $originalName,
             'file_path' => $clientId . '/' . $fileName,
             'media_type' => 'image',
-            'mime_type' => $file->getClientMimeType(),
+            'mime_type' => $mimeType,
             'file_size' => filesize(public_path($dir . '/' . $fileName)),
             'is_active' => true,
         ]);

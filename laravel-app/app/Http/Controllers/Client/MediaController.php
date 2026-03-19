@@ -34,9 +34,11 @@ class MediaController extends Controller
         $fileName = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
                     . '.' . $file->getClientOriginalExtension();
 
-        $file->move(public_path($dir), $fileName);
-
+        // Store metadata before moving the file (move invalidates the UploadedFile object)
+        $originalName = $file->getClientOriginalName();
         $mimeType = $file->getClientMimeType();
+
+        $file->move(public_path($dir), $fileName);
         $mediaType = 'image';
         if (str_starts_with($mimeType, 'video/')) {
             $mediaType = 'video';
@@ -46,7 +48,7 @@ class MediaController extends Controller
 
         $media = Media::create([
             'client_id' => $clientId,
-            'file_name' => $file->getClientOriginalName(),
+            'file_name' => $originalName,
             'file_path' => $clientId . '/' . $fileName,
             'alt_text' => $request->alt_text,
             'media_type' => $mediaType,
